@@ -1,0 +1,6 @@
+{
+  "deviations": [
+    "[2026-07-07T00:42:03] PRE-COMPUTATION AMENDMENT (during smoke test, before any Stage-1 statistic): tier b/c injections are IN-PLACE like-for-like replacements \u2014 each injected value v'=G_i*Q replaces record i itself (unique positions, capped at the eligible-record count with effective f reported). Rationale: sampling big-core templates but replacing random positions shifts the mixture's (G, core-magnitude) joint (smoke-test z ~ -27 on rounding_mass), which is a selection artifact, not the fabricator model; in-place replacement makes the mixture encoding-exact by construction. Confound check reported at BOTH levels: injected-set-vs-template (construction) and mixture-vs-host at f=0.10 (what a drift monitor sees).",
+    "[2026-07-07T00:43:45] Confound check reported at the mixture level (f=0.10 mixed set vs host, full-n bootstrap z) \u2014 the level a drift monitor sees; construction-level equivalence for in-place tiers holds by construction (template G_i reused exactly; |delta log10 core| <= 0.1)."
+  ]
+}

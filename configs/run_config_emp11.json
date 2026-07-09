@@ -1,0 +1,28 @@
+{
+  "run": "emp11",
+  "seed": 20260711,
+  "workers": 14,
+  "timestamp_utc": "2026-07-03T00:00:00Z",
+  "frozen_before_acquisition": true,
+  "question": "Does the L-profile distinguish sampled, revised employment estimates (CES) from an administrative near-census of the same quantity (QCEW), on the multiplicative and encoding axes?",
+  "design": {
+    "vintages": "CES cross-sections of many series at three release vintages (preliminary / 1st revision / 2nd-or-later revision) via ALFRED real-time archive; administrative comparator = QCEW employment counts at matching reference period",
+    "unit": "each vintage is a cross-section of many series values (state x supersector CES panel, matched across vintages); QCEW is area x industry employment counts",
+    "integerization": "canonical: CES values are thousands with one decimal -> x10 integerization recorded as detected precision (encoding axis input), analyzed both as stored-integer (x10) and as detected-decimals feature; QCEW counts are native integers",
+    "matching": "same series panel pulled at every vintage; series missing at any vintage dropped from all (matched cross-sections)"
+  },
+  "predictions": {
+    "multiplicative_axis": "keff and scale-clean residuals (dL1', dL2', dTail') ~ null (keff in [0.9, 1.1]; residual 90% CIs include 0) across ALL four vintages - employment figures are additive tallies; confirms the recording boundary",
+    "encoding_axis": "sampled estimates (initial and revisions) carry a rounding/precision signature (rounding_mass elevated, coarser detected precision) that the administrative exact count does not; signature strongest at initial, weakest at administrative",
+    "revision_drift": "encoding coordinates move monotonically initial -> 1st rev -> 2nd rev -> administrative (series converges toward the administrative encoding as it is completed)",
+    "vs_cP": "if the encoding axis separates sample from administrative where cP was null on count-vs-estimate, that is L-profile utility on the exact contrast cP could not read; if BOTH axes are null, that is the strongest confirmation that employment counts are multiplicatively and encoding-generic"
+  },
+  "decision_rules": {
+    "boundary_confirmed": "multiplicative axis null at every vintage per the CI rule above",
+    "provenance_signal": "encoding contrast (initial CES vs QCEW) bootstrap 90% CI on rounding_mass difference excludes 0 AND direction matches prediction",
+    "drift": "monotone ordering of the primary encoding coordinate across the four vintages (Kendall tau of coordinate vs vintage rank, all pairwise steps in predicted direction)"
+  },
+  "instruments": "same corpus-wide instruments, not re-tuned: baseline.csv digit-conditioned null, baseline_derounded_v2 scale-clean coordinates, rounding_mass/decimals/resonance encoding coordinates, family-level bootstrap CIs",
+  "acquisition_plan": "CES state x supersector (not seasonally adjusted) via ALFRED alfredgraph csv vintage interface (no key) or FRED API if key available; QCEW via open BLS data slices (data.bls.gov/cew/data/api); every deviation logged",
+  "hygiene": "predictions frozen before any fetch; cross-sections matched across vintages; encoding coordinates identical to corpus-wide definitions; seeds and workers recorded; figures PNG dpi 200"
+}

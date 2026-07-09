@@ -1,0 +1,2 @@
+contrast,n,d_keff,d_keff_lo,d_keff_hi,d_dL1p,d_dL1p_lo,d_dL1p_hi,d_dL2p,d_dL2p_lo,d_dL2p_hi
+synthetic_minus_real,30000,0.084784,0.081545,0.088224,-0.009105,-0.011669,-0.006753,0.008522,0.006277,0.010938

@@ -1,0 +1,41 @@
+# --- lprofile artifact repo: defensive ignores ---
+# Large raw-data pulls (>50MB) and bulk packages are NOT part of this repo;
+# the ~1.9GB intermediate corpus tables live only in the private analysis
+# tree and are referenced by hash in tables/MANIFEST.sha256, never committed.
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.parquet
+*.gz
+
+# Scratch / working dirs
+scratch/
+tmp/
+**/scratch/**
+
+# Credentials / secrets (must never be tracked)
+*.pem
+*.key
+*.env
+*credential*
+*secret*
+.netrc
+
+# The identified (non-anonymized) manuscript must NOT enter this repo
+# (it lives in the paper folder, not here). Belt-and-suspenders:
+lprofile_paper_*.tex
+lprofile_paper_*.pdf
+*_identified*
+
+# OS / editor junk
+.DS_Store
+*.swp
+*~
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.out
+*.synctex.gz

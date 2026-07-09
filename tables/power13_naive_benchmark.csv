@@ -1,0 +1,10 @@
+contrast,w,g0,note,naive_lastdigit,naive_trailzero,naive_lasttwo,encoding
+ces_persons_vs_qcew_state,250,10,,1.0,1.0,1.0,1.0
+acs_estimate_vs_census2020,800,10,,0.5435,0.3848,0.2934,0.774
+acs_moe_vs_census2020,800,10,,0.9984,0.7424,1.0,1.0
+b10_offgrid_realdonor_f10,1000,100000,obvious grid mismatch — ties expected,1.0,1.0,1.0,1.0
+b10_offgrid_benfordmatched_f10,1000,100000,leading-digit-matched adversarial,1.0,1.0,1.0,1.0
+subtle_tick47_vs_43_f10,1000,10,"non-decimal ticks, coprime to 100 — nothing in the last digits",0.4254,0.3814,0.3236,1.0
+subtle_tick47_vs_43_f25,1000,10,"non-decimal ticks, coprime to 100 — nothing in the last digits",0.4196,0.4162,0.5301,1.0
+subtle_mixed_era_f10,1000,100000,marginals matched; precision decorrelated from magnitude,0.46,0.458,0.46,0.4897
+subtle_mixed_era_f25,1000,100000,marginals matched; precision decorrelated from magnitude,0.5,0.7374,0.5,0.4614

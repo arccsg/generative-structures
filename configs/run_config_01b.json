@@ -1,0 +1,13 @@
+{
+  "run_id": "lpg01-0643fff9",
+  "subrun": "01b",
+  "build": "01b-corpus-diagnostic-and-channel-kind-tagging",
+  "timestamp_utc": "2026-07-02T22:28:45.515005+00:00",
+  "inputs": [
+    "tables/catalog.csv",
+    "tables/column_profiles.csv (n_distinct_int only)"
+  ],
+  "dup_key_definition": "md5(basename(file or member)|column_name|frac_integer|min|max|n_integer) \u2014 content fingerprint, NOT path: GSOD station-years stay distinct unless sampled stats collide",
+  "representative_rule": "lexicographically smallest (file_path, archive_member, sheet_or_table, column_name) per dup_key",
+  "notes": "channel_kind + generating_process are metadata only; never fed to clustering/projection/distance/geometry"
+}

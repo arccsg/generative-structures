@@ -1,0 +1,14 @@
+{
+  "run": "hunt09",
+  "seed": 20260709,
+  "workers": 14,
+  "timestamp_utc": "2026-07-03T20:24:28.463978+00:00",
+  "predictions": {
+    "bulk_cod_multiplicity_products": "keff < 1, replicating Build 08's ~0.5-0.8 with tighter CI at larger n",
+    "spectroscopic_degeneracy_products": "keff != 1, direction UNCERTAIN (pre-registered as such): odd-smooth stacking (low) vs distinct small odd primes (high) \u2014 measure which",
+    "graph_automorphism_orders": "keff elevated for composite-large |Aut|; RISK pre-registered: many real graphs trivial/small |Aut| (magnitude-defeated)",
+    "build06_residual_core_magnitude": "H0 (artifact): dTail'' -> 0 under a CORE-digit-indexed null (smaller cores compared at original d explain the excess). H1 (real): stays < 0 with 90% family-bootstrap CI excluding zero",
+    "if_H1_mechanism": "exponent-stacking (few distinct primes, high exponents \u2014 crystallography mechanism), NOT single-large-prime genericity"
+  },
+  "decision_rule": "H1 iff arm-domain family-bootstrap 90% CI of mean dTail_core excludes 0 AND overall observational CI excludes 0; else H0"
+}

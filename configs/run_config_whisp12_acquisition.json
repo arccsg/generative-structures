@@ -1,0 +1,8 @@
+{
+  "deviations": [
+    "[2026-07-06T00:56:22] 2020 pure enumeration unavailable keylessly (Census API now requires a key); ESTIMATESBASE2020 from co-est2024 used as the 2020 census comparator (April 1 count with minor geographic modifications). 2010 CENSUS2010POP is the pure enumeration.",
+    "[2026-07-06T00:56:31] synthetic generator: log10-KDE (scipy gaussian_kde) fitted to real channel archive__real-estate-sales-2001-2023-gl-csv__sale-amount__f692a799, samples snapped to the host grid by digit-conditional trailing-zero resampling; sdv/CTGAN not installed (heavy torch dependency) \u2014 generator choice logged per protocol.",
+    "[2026-07-06T23:21:37] SA panel proceeding at 540/816 coverage: the ALFRED edge re-blocked mid-fetch and 276 cells would cost hours at breaker cadence; CI-width consequence reported in the note",
+    "[2026-07-06T23:21:37] SA storage precision: identical to NSA (thousands with one decimal = 100-person grid; 3-6 significant figures by state size) \u2014 the seasonal multiply is rounded to this grid at publication (Build 07/10 cliff applies at ~4-5 sig figs). Matched pairs n=537."
+  ]
+}

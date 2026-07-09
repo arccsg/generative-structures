@@ -1,0 +1,10 @@
+family,n_in_range,mean_keff,auc_vs_single,auc_vs_sum,note
+GL_order,27,1.847,0.9077,0.889,
+binomial,8,3.7467,0.9965,0.9979,
+bsmooth_31,300,2.9474,0.9874,0.9824,
+central_binomial,3,,,,too few in-range values for AUC
+factorial,12,2.399,0.9663,0.9633,
+multinomial_real_margins,0,,,,too few in-range values for AUC
+prime_pair,300,1.0353,0.417,0.4523,
+primorial,15,3.8721,0.9402,0.9416,
+sporadic_group_order,4,,,,too few in-range values for AUC

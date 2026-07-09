@@ -1,0 +1,17 @@
+run_id,deviation,impact,where_reported
+hunt08,COD sample reduced from >=20k to 3000 CIFs (server courtesy),smaller multiplicity-product set; bulk pull left to user,build08.md Sec 2.4/5
+hunt09,unpacked Archive snapshots deleted from disk mid-build,"2360 channels unrecoverable, 83 remapped; coverage 87.5% ch/98.6% fam",build09.md coverage note; FINDINGS.md Sec 11
+hunt09,COD paginated politely rather than bulk-mirror,N_CIF=12000 sampled; deviation from >=50k logged,build09.md; stage16_hunt09.py cod()
+hunt09,NIST ASD fetched with browser User-Agent,access to energy-level tables; no data alteration,stage16_hunt09.py nist()
+emp11,urllib TLS-fingerprint blocked by St.Louis Fed edge,switched to curl subprocess fetcher,run_config_emp11_acquisition.json; build11.md Sec 2
+emp11,ALFRED rate-limits bursts; multi-series time out >12,batched (B=10) with exponential circuit breaker; resumable cache,run_config_emp11_acquisition.json
+emp11,Dec-2025 state CES had only 2 published vintages,monthly first revision folded into benchmark; drift seq = 3 states,build11.md Sec 2; run_config_emp11_acquisition.json
+emp11,27 of 2445 CES cells (DE/DC mnemonics) nonexistent,dropped by matched-panel rule; 805 matched series retained,run_config_emp11_acquisition.json
+whisp12,Census API now requires a key for all requests,2020 comparator = ESTIMATESBASE2020 (not pure enumeration); 2010 pure,build12.md Sec 2; run_config_whisp12_acquisition.json
+whisp12,ALFRED re-blocked mid-fetch; SA panel capped 540/816,537 matched SA/NSA pairs; CI-width consequence reported,build12.md Sec 3.2/5; run_config_whisp12_acquisition.json
+whisp12,sdv/CTGAN not installed (torch dependency),synthetic generator = log-KDE + grid-snap; choice logged,build12.md Sec 2; run_config_whisp12_acquisition.json
+power13,in-place like-for-like replacement (pre-computation amend),"mixture (grid,magnitude) joint host-exact by construction",run_config_power13_acquisition.json; build13.md Sec 1
+power13,confound check reported at mixture level (f=0.10),the level a drift monitor sees; construction-level exact for in-place,run_config_power13_acquisition.json
+vote14,reported-vs-certified vote vintages not archived keylessly,contrast not obtained; pre-registered as likely-null/unobtainable,build14.md Sec 2; run_config_vote14_acquisition.json
+vote14,QCEW combined-NAICS slugs (31-33 etc.) 404,manufacturing entered via supersector code 1013,run_config_vote14_acquisition.json
+corpus,41 gen_* generator families leaked into observational set,quarantined at Build 06; family-level conclusions robust (v2 freeze),FINDINGS.md Sec 5.4

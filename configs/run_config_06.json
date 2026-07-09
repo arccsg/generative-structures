@@ -1,0 +1,10 @@
+{
+  "run_id": "lpg01-0643fff9",
+  "subrun": "06",
+  "seed": 20260706,
+  "workers": 14,
+  "timestamp_utc": "2026-07-03T15:56:01.742825+00:00",
+  "quarantine_patch": "(^|[_\\-/ ])gen([_\\-/ ]|$)",
+  "deep_strip": "variants: primes <=7 and <=13 divided out; deep baselines matched on ORIGINAL digit stratum; p-smooth records excluded from core means (fraction logged); null weights renormalized over defined strata",
+  "geometry_hygiene": "deep-core coordinates only; labels post-hoc for color/scoring"
+}

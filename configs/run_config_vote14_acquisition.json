@@ -1,0 +1,6 @@
+{
+  "deviations": [
+    "[2026-07-07T02:02:11] reported-vs-certified contrast NOT OBTAINED: election-night snapshots are not durably archived on the keyless sources used; all vote series here are certified/canvassed. The frozen prediction registered this contrast as likely-null and possibly unobtainable; reported as not-obtained.",
+    "[2026-07-07T02:02:31] subtle-grid probe: non-decimal structure found in ['cvap_county_modeled']"
+  ]
+}

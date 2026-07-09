@@ -1,0 +1,11 @@
+{
+  "run": "gate07",
+  "seed": 20260707,
+  "workers": 14,
+  "timestamp_utc": "2026-07-03T16:49:20.961722+00:00",
+  "band": "[1e6, 1e7), all rungs bin-matched on log10 to Uniform(6,7) over 50 bins (identical magnitude, moments, digit distribution)",
+  "rungs": "single, sum2, sum3, count(Poisson tally), prod2..6",
+  "keff": "per-record keff_rec = E[H2|d=7]/H2(rec); rung keff = E[H2|d=7]/mean H2; keff-only classifier = keff_rec",
+  "no_rounding_in_core_rungs": true,
+  "notes": "anchors (RSA/smooth/primorial/factorial) regenerated synthetically as the same constructions"
+}

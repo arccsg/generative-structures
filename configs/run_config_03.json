@@ -1,0 +1,12 @@
+{
+  "run_id": "lpg01-0643fff9",
+  "subrun": "03",
+  "timestamp_utc": "2026-07-03T12:47:00.294817+00:00",
+  "workers": 14,
+  "seed_derounded_baseline": 20260703,
+  "corpus_sampling": "identical per-file seeds to Build 02 (md5(file|member)) \u2014 same 200k samples",
+  "derounding": "n = 2^a 5^b * core; rounding_mass = (a ln2 + b ln5)/ln n; core L-profile from the same factorization; core==1 rows excluded from core means (frac_core1 logged); v3 share recorded, not stripped",
+  "baseline_derounded": "indexed by ORIGINAL digit stratum d; uniform draws de-rounded identically",
+  "clustering": "HDBSCAN (min_cluster_size tuned by silhouette) + Ward cross-check; inputs standardized L-derived coordinates ONLY; labels attached after clustering",
+  "geometry_hygiene": "domain/family/kind/process/corpus_role never enter residuals, clustering, or any distance; color/composition only"
+}

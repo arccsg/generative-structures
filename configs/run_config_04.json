@@ -1,0 +1,44 @@
+{
+  "run_id": "lpg01-0643fff9",
+  "subrun": "04",
+  "seed": 20260704,
+  "workers": 14,
+  "timestamp_utc": "2026-07-03T13:06:51.102516+00:00",
+  "feature_sets": {
+    "encoding_only": [
+      "rounding_mass",
+      "v3_share",
+      "mean_log10_digits",
+      "sd_log10_digits"
+    ],
+    "process_only": [
+      "dL1_der",
+      "dL2",
+      "dTail_der",
+      "keff",
+      "L1_der",
+      "L2_der"
+    ],
+    "all": [
+      "rounding_mass",
+      "v3_share",
+      "mean_log10_digits",
+      "sd_log10_digits",
+      "dL1_der",
+      "dL2",
+      "dTail_der",
+      "keff",
+      "L1_der",
+      "L2_der"
+    ]
+  },
+  "deviations": [
+    "process_only uses L2_der in place of the prompt's de-rounded H2' (never computed in Build 03; recomputing would need a corpus re-read)"
+  ],
+  "exclusions": [
+    "synthetic_control channels excluded from supervised runs",
+    "domain=unresolved excluded from the domain target",
+    "domains with <5 families pooled as 'other'"
+  ],
+  "cv": "GroupKFold(5), groups=dataset_family; family-level replicate with KFold(5)"
+}

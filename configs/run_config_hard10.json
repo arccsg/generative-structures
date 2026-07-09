@@ -1,0 +1,90 @@
+{
+  "run": "hard10",
+  "seed": 20260710,
+  "workers": 14,
+  "timestamp_utc": "2026-07-03T22:51:39.787568+00:00",
+  "stage1_semiprime": {
+    "design": "balanced (rho=1) semiprimes p*q at product digits d in {8,10,12,14,16} and imbalanced (rho=2,4) at d=12; nulls: matched log-uniform single draws and uniform-in-stratum generic integers; 4000 positives + 4000 per null per cell",
+    "statistics": "keff_rec=E[H2|d]/H2 (score as-is); -Tail; -atoms; -L3; -H3; group-level (m=200) energy distance of the padded sorted profile to a held-out null cloud",
+    "predictions": {
+      "keff": "AUC ~ 0.5 (0.40-0.60) for balanced semiprimes \u2014 blind, an identity: H2=0.5 sits on E[H2] under PD(0,1)",
+      "full_profile": "at least one of {Tail, atoms, L3, H3, energy} reaches AUC >= 0.8 on balanced semiprimes (the profile is (~.5,~.5,0,...): two atoms, zero tail \u2014 visible to statistics keff discards)"
+    },
+    "consequence": "if confirmed, the paper's 'L-profile is blind to prime pairs' is corrected to 'keff is blind; the full profile is not' and cryptographic-modulus detection is un-ruled-out"
+  },
+  "stage2_spikein": {
+    "host_selection_rule": "channel_profiles_v3 x corpus v2, file still on disk, channel_kind=='amount', not low_info, n_records_used >= 50000, n_distinct >= 5000, 0.2 <= rounding_mass <= 0.9, log10_max >= 5; dedupe by dataset_family keeping highest n_records_used, then dedupe by lowercase column_name (the corpus is ~8x duplicated across archive snapshot generations; family dedupe alone leaves snapshot copies of the same file); sort rounding_mass desc; take top 6 (criteria frozen before any Stage-2 statistic is computed; column-name dedupe added as a pre-computation amendment after the first selection returned 5 snapshot copies of one CT sale-amount file)",
+    "injection": {
+      "unrounded": "exact balanced prod2 (two composite factors, jitter 0.08) magnitude-matched to host records",
+      "postrounded": "same products rounded to the host grid (trailing-10 depth resampled from host marginal) \u2014 gate07 physics bound, EXPECTED destroyed; reported, excluded from the powered decision",
+      "covarying": "priced-quantity products a*b where the price a is rounded to a host-like grid with (magnitude, depth) sampled JOINTLY from host records \u2014 the product is exact and carries 2*5 mass covarying with magnitude, the adversarial over-control case"
+    },
+    "fractions": [
+      0.01,
+      0.05,
+      0.1,
+      0.25
+    ],
+    "pipeline": "unchanged: canonical integerization, 2*5 de-rounding (keff' vs baseline_derounded_v2 by original d), deep strip <=7 with core-magnitude re-indexing (keff_core, dTail_core vs baseline_coremag cut=7)",
+    "decision_rule": "channel flags at f iff keff_core_c7(mixed) > q95 of the channel's own f=0 record-bootstrap (R=400, n-matched); 'recovered at f' = flagged in > half of host channels; POWERED iff unrounded recovered at f=0.05 AND covarying recovered at f=0.10; else the pipeline over-controls and the negative verdict is softened",
+    "secondary": "dTail_core_c7 > q95 and keff' > q95 reported"
+  },
+  "stage3_binarygrid": {
+    "binary_sources": "real file sizes (inventory.csv, dedup sha256), block-aligned disk allocations (st_blocks*512 over on-disk corpus files), archive-member uncompressed sizes, telemetry byte counts (frozen corpus)",
+    "decimal_comparators": "the Stage-2 host amount channels; log-uniform synthetic control",
+    "statistics": "c2/c5 shares (mean a_p*ln p/ln n) minus digit-weighted uniform-null expectation; frac divisible by 8/16 and 25/125 vs null",
+    "prediction": "binary-grid sources show elevated c2 (excess > 0, >= 3x their c5 excess) with c5 near baseline; decimal channels elevated on BOTH c2 and c5 (5 especially) \u2014 encoding-specific arms, out of sample"
+  },
+  "stage4_degradation": {
+    "base": "balanced prod2 (gate07 g_prod2_ratio(1.0)) and matched single null, band [1e6,1e7), bin-matched, n=30000 each",
+    "perturbations": {
+      "grid": [
+        2,
+        5,
+        10,
+        25,
+        100,
+        1000
+      ],
+      "sigfig": [
+        5,
+        4,
+        3,
+        2
+      ],
+      "additive": "n + U{1..E}, E in {1,3,10,100,1000,10000} (E=1 is the exact n -> n+1 case)"
+    },
+    "score": "AUC of per-record keff vs the SAME-perturbed single null (the honest comparison, per gate07)",
+    "predictions": {
+      "monotone": "AUC non-increasing in perturbation size within each family (tolerance 0.02)",
+      "n_plus_1": "a single additive unit collapses detection: AUC(n+1) <= 0.55 \u2014 multiplicative independence of neighbors; 'one digit of rounding' strengthens to 'one additive unit'"
+    }
+  },
+  "stage5_integrity": {
+    "hosts": "first 4 channels of the Stage-2 host list (stable encoding signature: rounded amounts)",
+    "window": "w=2000 test windows vs the channel's reference half; encoding coordinates calibrated on 300 clean windows; AUC over 120 clean vs 120 injected windows per cell",
+    "injections": {
+      "real_donor": "real telemetry byte-count records, digit-matched to the host (foreign real data, fine grid)",
+      "synthetic_finegrid": "log-uniform unrounded integers matched to host magnitudes",
+      "benford_matched": "THE SHARP CASE: first digit AND digit length matched to the host empirical distribution, mantissa uniform (passes any leading-digit test by construction), off-grid"
+    },
+    "fractions": [
+      0.02,
+      0.05,
+      0.1,
+      0.2
+    ],
+    "methods": {
+      "encoding": "max |z| over {rounding_mass, mean trailing-10 depth, frac on host modal grid, TV(mod 100) drift} z-scored on clean-window calibration",
+      "benford": "chi2 of window first-digit distribution vs the reference half (drift form; vs-law also reported)",
+      "lastdigit": "chi2 of window last-digit distribution vs reference (vs-uniform also reported)"
+    },
+    "predictions": {
+      "grid_mismatch": "encoding detects grid-mismatched injection (AUC >= 0.8 by f=0.10 on real_donor and synthetic_finegrid)",
+      "sharp_case": "on benford_matched, Benford is at chance (AUC 0.4-0.6) while encoding stays >= 0.8 at f >= 0.10",
+      "redundancy_rule": "if encoding cannot beat or complement Benford anywhere, it is redundant and we say so",
+      "stated_limit": "a fabricator who matches the host grid defeats both channels \u2014 stated explicitly"
+    }
+  },
+  "hygiene": "matched nulls on magnitude/first moments; Benford and last-digit implemented as standard baselines; predictions frozen before computation; labels never enter geometry"
+}

@@ -1,0 +1,32 @@
+{
+  "run_id": "lpg01-0643fff9",
+  "subrun": "05",
+  "seed": 20260705,
+  "workers": 14,
+  "timestamp_utc": "2026-07-03T14:20:15.782224+00:00",
+  "decimals": "detected from raw stored values (string decimal places, or float with 1e-6 relative tolerance); tick = gcd of values scaled by 10^decimals",
+  "shape_block": [
+    "dL1_der",
+    "dL2_der",
+    "dTail_der",
+    "H2_der",
+    "keff_der",
+    "L1_der",
+    "L2_der"
+  ],
+  "encoding_block": [
+    "decimals",
+    "tick_log10",
+    "rounding_mass",
+    "v3_share",
+    "mean_log10_digits",
+    "sd_log10_digits"
+  ],
+  "dL2_der": "canonical de-rounded L2 residual vs baseline_derounded_v2 (raw dL2 retired from the process space)",
+  "baseline_v2": "seed 20260703 (identical draws to Build 03) + E[H2'|d]; keff' = H2'_null_w / H2'_obs",
+  "umap": {
+    "n_neighbors": 20,
+    "min_dist": 0.1
+  },
+  "geometry_hygiene": "no labels in pass/baseline/features/embedding/clustering/anomaly stages; overlays post-hoc only"
+}

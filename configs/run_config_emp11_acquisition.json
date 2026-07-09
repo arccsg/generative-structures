@@ -1,0 +1,15 @@
+{
+  "started_utc": "2026-07-06T00:02:31.078236+00:00",
+  "deviations": [
+    "fetches via curl subprocess (urllib TLS fingerprint is bot-blocked by the StLouisFed edge)",
+    "batched multi-series requests with per-series vintage lists; 404 batches bisected to isolate nonexistent state x supersector series",
+    "28 series-vintage cells left unfetched (timeout-instead-of-404 ids); dropped by matched-panel rule",
+    "1 CES series missing >=1 vintage, dropped from matched panel: ['MDMFGN']...",
+    "Dec-2025 state CES has exactly TWO published states this cycle: preliminary and benchmark-revised (first revision folded into the mid-April 2026 state benchmark release; verified by vintage probes 2026-04-05 vs 2026-04-20). v2 (2026-03-25) duplicates v1 for all 805 series and is dropped from the drift sequence; the sequence is initial -> benchmark-revised -> administrative."
+  ],
+  "n_invalid_series": 0,
+  "invalid_series": [],
+  "finished_utc": "2026-07-06T00:03:03.432829+00:00",
+  "n_ces_series_matched": 805,
+  "n_qcew_rows": 40275
+}

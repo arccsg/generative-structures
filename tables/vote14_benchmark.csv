@@ -1,0 +1,6 @@
+contrast,w,g0,note,naive_lastdigit,naive_trailzero,naive_lasttwo,beber_scacco,encoding
+county_votes_vs_cvap_modeled,900,10,enumerated counts vs ACS-derived modeled estimates (published on a 5-grid),1.0,1.0,1.0,1.0,1.0
+county_votes_vs_benford_fabrication_f10,900,10,Build-10 adversarial: passes any leading-digit test by construction,0.0873,0.3346,0.0037,0.2266,0.6838
+county_votes_vs_benford_fabrication_f25,900,10,Build-10 adversarial: passes any leading-digit test by construction,0.1113,0.3201,0.0027,0.2491,0.8306
+nc_precinct_vs_benford_fabrication_f10,900,10,precinct magnitudes (2-4 digits),0.3746,0.3358,0.2208,0.5502,0.6088
+nc_precinct_vs_benford_fabrication_f25,900,10,precinct magnitudes (2-4 digits),0.4663,0.4764,0.2192,0.4964,0.57

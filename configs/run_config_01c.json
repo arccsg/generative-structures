@@ -1,0 +1,18 @@
+{
+  "run_id": "lpg01-0643fff9",
+  "subrun": "01c",
+  "build": "01c-apply-exclusions-freeze-analysis-corpus",
+  "supersedes": "01b",
+  "timestamp_utc": "2026-07-02T22:33:58.395230+00:00",
+  "inputs": [
+    "tables/catalog.csv",
+    "tables/column_profiles.csv (n_distinct_int only)"
+  ],
+  "exclusions": {
+    "weather": "topic==meteorology OR path/member matches gsod|noaa|ncdc|ghcn|isd_|weather|climate|station-year (case-insensitive)",
+    "sec_filing": "file_path contains risk-10-k, or a path component 'sec', or filename matches \\b(10[- ]?k|8[- ]?k|def[- ]?14a|proxy[- ]?statement)\\b"
+  },
+  "dup_key_definition": "md5(basename(file or member)|column_name|frac_integer|min|max|n_integer) \u2014 content fingerprint, NOT path; station-years stay distinct unless sampled stats collide",
+  "representative_rule": "lexicographically smallest (file_path, archive_member, sheet_or_table, column_name) per dup_key",
+  "notes": "exclusion is a flag; nothing moved/deleted. channel_kind + generating_process are metadata only."
+}

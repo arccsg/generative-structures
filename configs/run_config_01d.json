@@ -1,0 +1,15 @@
+{
+  "run_id": "lpg01-0643fff9",
+  "subrun": "01d",
+  "build": "01d-resolve-domains-and-dataset-families",
+  "timestamp_utc": "2026-07-02T23:13:50.446941+00:00",
+  "inputs": [
+    "tables/analysis_corpus_candidate.csv",
+    "tables/column_profiles.csv (column sets only)"
+  ],
+  "family_definition": "(top_project, rel_dir stripped of generic components, filename stem with numeric/date/window suffixes stripped and long digit runs masked, colset_sig = md5 of the file's full sorted column-name set)",
+  "deviations": [
+    "'flow' alone does not fire network_telemetry (would hit streamflow/cash-flow); it requires a second telemetry token (n_bytes/n_packets/sum_n_dest/netflow)"
+  ],
+  "notes": "nothing dropped or capped; domain/dataset_family are structural bookkeeping; channel_kind and generating_process stay metadata-only."
+}

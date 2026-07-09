@@ -1,0 +1,28 @@
+{
+  "run": "vote14",
+  "seed": 20260714,
+  "workers": 14,
+  "timestamp_utc": "2026-07-06T00:00:00Z",
+  "frozen_before_any_fetch": true,
+  "framing_statement": "STRICTLY METHODOLOGICAL. Every claim in this build is about the recording grid and provenance channel of published integer series. The build makes NO claim about the legitimacy, integrity, or correctness of any election, jurisdiction, or return. Digit-forensic methods (Beber-Scacco) are computed as named methodological competitors on the same detection tasks, never as fraud verdicts.",
+  "instruments": "unchanged: canonical integerization; scale-clean multiplicative axis (keff, dL1', dL2', dTail' on 2*5-free cores vs baseline_derounded_v2, digit-conditioned); encoding axis (rounding_mass, trailing-10 depth, grid conformance, c2/c5 shares, residue TV mod 100/25/49/47/43, digit-conditioned rounding-mass split); 90% bootstrap CIs over units",
+  "predictions": {
+    "multiplicative_enumerated_counts": "null at every aggregation level with adequate magnitude (keff in [0.9,1.1], scale-clean residual CIs cover 0) - votes are additive tallies; fourth boundary confirmation. Registered caveat: precinct-level counts are 1-4 digits (little profile dynamic range); the informative levels are county and state",
+    "encoding_reported_vs_certified": "likely a NULL CONTRAST - both are exact counts on no grid; pre-registered honestly as such. (If distinct reported-vs-certified vintages prove unobtainable keylessly, the non-acquisition is logged and the contrast reported as not-obtained.)",
+    "encoding_modeled_vs_enumerated": "modeled/allocated figures carry a rounding/precision grid the enumerations do not. Planned modeled series: Census CVAP special-tabulation estimates (ACS-derived, published rounded to the nearest 5) vs enumerated vote counts at the same county geography - the provenance separation, if the modeled series is obtained",
+    "naive_vs_encoding_benchmark": "on obvious decimal/5-grids the naive battery TIES the encoding coordinates - pre-registered honestly as 'may tie'; the encoding channel adds value only if a non-decimal or subtle grid is present in the wild (a residue-TV scan of every acquired series is the probe; finding none is a reportable honest outcome, the Build-13 47/43 result stands as the constructed demonstration)",
+    "beber_scacco": "computed as the named competitor (last-digit uniformity chi2 on counts >= 1000, per the literature's magnitude screen), reported per series and as a benchmark column, never as a verdict about any election"
+  },
+  "benchmark_design": {
+    "contrasts": [
+      "county_votes_vs_cvap_modeled (enumerated vs modeled/allocated at matched geography)",
+      "county_votes_vs_benford_matched_fabrication f=0.10 (Build-10 leading-digit-matched adversarial foreign records injected into real returns - the fabrication-relevant methodological case)",
+      "subtle_grid_probe: residue TV mod {25,49,47,43} scan of every acquired series; a window benchmark is run on any series showing non-decimal grid structure; if none exists this is reported without spin",
+      "reported_vs_certified IF distinct vintages are obtained"
+    ],
+    "methods": "naive last-digit chi2 (drift), trailing-zero-count chi2 (drift), last-two-digit chi2 (drift), Beber-Scacco last-digit uniformity chi2 (vs uniform, counts >= 1000), encoding max|z| (Build-13 coordinate set); windows w = min(1000, n/3), 200 calibration + 100 clean + 100 test windows, AUC by rank",
+    "decision_language": "ties reported as ties; encoding ADDS VALUE only where max(naive, beber_scacco AUC) < 0.6 and encoding >= 0.8 (same bar as Build 13)"
+  },
+  "acquisition_plan": "all keyless public sources, logged: (1) NC State Board of Elections precinct-level result zips (dl.ncsbe.gov ENRS, 2020 and 2024 generals) - large open precinct source; (2) nationwide county-level presidential returns (tonmcg/US_County_Level_Election_Results GitHub raw CSV, 2020/2024, certified); (3) state-level = county aggregation; (4) Census CVAP special-tab county file (www2.census.gov rdo datasets, rounded-to-5 modeled series); every miss logged and continued",
+  "hygiene": "fully autonomous; predictions frozen before any fetch; instruments unchanged; deviations to run_config_vote14_acquisition.json; PNG dpi 200; seeds + workers recorded"
+}

@@ -1,0 +1,12 @@
+Anonymization performed for blind review
+============================================
+Rule 1: '/Users/<the author's macOS username>' -> '/Users/<ANON>' in all text files.
+Rule 2: Dropbox CloudStorage absolute prefix -> '<ARTIFACT_ROOT>'.
+Rule 3: bare username '<the author's macOS username>' -> '<ANON>'.
+Binary figures (.png) carry no path metadata; copied verbatim.
+No author names or machine identifiers were present in any included file (only the username in absolute paths).
+
+Files modified during anonymization (3):
+  scripts/build02_lib.py: 1 username/path token(s) stripped
+  scripts/common.py: 1 username/path token(s) stripped
+  scripts/stage7_resolve01d.py: 1 username/path token(s) stripped

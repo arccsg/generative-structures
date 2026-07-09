@@ -1,0 +1,14 @@
+{
+  "run": "hunt08",
+  "seed": 20260708,
+  "workers": 14,
+  "timestamp_utc": "2026-07-03T17:27:41.838361+00:00",
+  "preregistered_predictions_from_gate07": {
+    "structured_composite_products": "keff elevated; AUC >= 0.85 vs magnitude/moment-matched single and sum nulls",
+    "prime_pair_products": "keff ~= 1.1 (near-null, reconfirming the gate's surprise)",
+    "count_additive_fields": "keff ~= 1.0",
+    "rounded_anything": "collapses toward null (not tested here; gate07 result stands)"
+  },
+  "null_extension": "d>18: E[X|d] = X_inf + a/d fitted on strata 10..18, asymptotes pinned to PD(0,1)/Ewens exact values",
+  "cod_note": "sample reduced to ~3,000 CIFs (6 threads, polite) from the >=20k ask \u2014 flagged; bulk pull left to the user"
+}

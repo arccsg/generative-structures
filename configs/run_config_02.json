@@ -1,0 +1,16 @@
+{
+  "run_id": "lpg01-0643fff9",
+  "subrun": "02",
+  "seed": 20260702,
+  "timestamp_utc": "2026-07-03T00:48:02.076802+00:00",
+  "build": "02-factorize-and-first-geography",
+  "definitions_source": "prime-factorization/CANONICAL_DEFINITIONS.md",
+  "lprofile": "L_j = a_j ln(p_j)/ln(n), prime-power parts, sorted desc; H2 over all parts; Tail = 1 - L1 - L2",
+  "theta_hat": "1/H2_mean - 1 (canonical; prompt's (1-H2)/(H2-1/n) variant superseded)",
+  "keff": "H2_null_digitweighted / H2_obs (== (theta+1)/N_eff(B))",
+  "factorizer": "SPF sieve < 1e7; sympy isprime/factorint above; exact; values > 1e18 logged+skipped",
+  "monetary": "amount/looks_monetary channels \u00d7100 cents, round-half-to-even",
+  "sampling": "per-channel cap 200k records (head 100k + seeded random 100k for large seekable files)",
+  "baseline": "200000 uniform draws per digit stratum, strata 1..D (D >= 13), + PD(0,1) KTP row",
+  "geometry_hygiene": "no clustering/projection/distance in this build; metadata is color/grouping only"
+}

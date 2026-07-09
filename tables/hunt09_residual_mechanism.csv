@@ -1,0 +1,6 @@
+group,keff,frac_exp_carrier,omega,maxexp
+null_uniform_cores,1.0,0.0088,2.117,1.0306
+observational_concentrated,0.9913,0.0186,1.4105,1.0222
+observational_all,1.0032,0.0223,1.3647,1.0267
+cod_multiplicity_products,0.5341,0.9996,1.0519,79.0906
+nist_degeneracy_products,1.7067,,3.5564,8.7743

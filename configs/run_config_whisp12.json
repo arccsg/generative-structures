@@ -1,0 +1,43 @@
+{
+  "run": "whisp12",
+  "seed": 20260712,
+  "workers": 14,
+  "timestamp_utc": "2026-07-05T00:00:00Z",
+  "frozen_before_any_fetch": true,
+  "question": "Does the L-profile multiplicative axis detect estimation-multiplication (rate estimators, seasonal factors) that survives to the stored integer? Replicate the Build-11 CES-preliminary whisper (dL1' +0.016, dL2' -0.015, vanishing after benchmarking) on independent machinery, or retire it.",
+  "instruments": "canonical, unchanged, not re-tuned: multiplicative axis = scale-clean block (dL1', dL2', dTail', keff on 2*5-free cores vs baseline_derounded_v2, digit-conditioned); encoding axis = rounding_mass, trailing-10 depth, corpus resonance score; 90% bootstrap CIs over cross-section units (2000 resamples)",
+  "predictions": {
+    "census_enumeration_2010_2020": {
+      "multiplicative": "null (pure counting)",
+      "encoding": "~null (exact integers)"
+    },
+    "pep_cohort_component_estimate": {
+      "multiplicative": "trace OR null - rate-multiply may survive summation or be washed out; test whether PEP > census on dL1' (and PEP dL2' < census) CI-clean at matched magnitude (identical county sets)",
+      "encoding": "~null (exact integers)"
+    },
+    "nsa_series": {
+      "multiplicative": "null (tallies)",
+      "encoding": "~null / native grid (thousands with 1 decimal)"
+    },
+    "sa_series": {
+      "multiplicative": "trace OR null - seasonal multiply may survive, or be destroyed by storage rounding (the Build 07/10 cliff: SA stored at ~4-5 significant figures)",
+      "encoding": "may carry SA rounding grid"
+    },
+    "acs_5yr_vs_decennial": {
+      "multiplicative": "null",
+      "encoding": "fires (ACS rounded / carries MOE) - provenance-channel confirmation; MOE column expected to be the strongly rounded artifact"
+    },
+    "synthetic_vs_real_exploratory": {
+      "multiplicative": "uncertain - generative multiplication may leave a trace; EXPLORATORY, downstream of the same hypothesis, reported as such and excluded from the promote/retire rule",
+      "encoding": "match by construction (synthetic values snapped to the real channel's grid)"
+    }
+  },
+  "decision_rule": "PROMOTED iff the whisper replicates CI-clean on at least one independent estimation-multiplication case (PEP or SA), in the same direction as CES (dL1' > 0, dL2' < 0), at effect size >= ~0.01 (the CES whisper), and the effect survives a magnitude-matched null (matched synthetic cross-section reads ~0 and the estimate-vs-count contrast is CI-separated at identical magnitudes). Otherwise RETIRED to a discussion footnote. Either way the project proceeds to writeup.",
+  "acquisition_plan": {
+    "census_pep": "PEP bulk vintage CSVs www2.census.gov co-est2019-alldata.csv (CENSUS2010POP enumerated + POPESTIMATE2015 vintage-2019 mid-decade) and co-est2024-alldata.csv (POPESTIMATE2022 vintage-2024); 2020 decennial P1_001N county counts via api.census.gov/data/2020/dec/pl (keyless)",
+    "sa_nsa": "state CES December 2025 at the latest vintage: NSA reused from the emp11 cache (v3, vintage 2026-06-25); SA counterparts fetched from ALFRED (SMS-form ids + no-N mnemonics) with the emp11 batched/circuit-broken curl fetcher; SA storage precision logged explicitly",
+    "acs": "ACS 5-year 2022 county B01001_001E estimate + B01001_001M MOE via api.census.gov (keyless)",
+    "synthetic": "Gaussian-copula-style generator (rank-normal in log space) fitted to a real frozen-corpus channel, samples snapped to the channel's detected grid; sdv/CTGAN only if trivially installable - generator choice logged"
+  },
+  "hygiene": "predictions and decision rule frozen before any fetch; run fully autonomous, deviations logged to run_config_whisp12_acquisition.json and continued; identical county sets for estimate-vs-count contrasts (magnitude-matched by construction); figures PNG dpi 200; seeds recorded"
+}

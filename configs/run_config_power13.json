@@ -1,0 +1,47 @@
+{
+  "run": "power13",
+  "seed": 20260713,
+  "workers": 14,
+  "timestamp_utc": "2026-07-06T00:00:00Z",
+  "frozen_before_computation": true,
+  "purpose": "De-circularize the Build-10 powered-null claim (quotient-level grid-respecting injection), close or open the H2-null-mimic gap (balanced pairs through the full battery in real channels), and benchmark the provenance channel against naive digit detectors including subtle grids.",
+  "instruments": "unchanged: canonical integerization; 2*5 de-rounding; deep strip <=7 with core-magnitude re-indexing vs baseline_coremag cut=7; encoding coordinates from the corpus battery (rounding_mass, trailing-10 depth, grid conformance, c2/c5 shares, residue TV at the corpus moduli 25/49/47/43, digit-conditioned rounding mass = the project's standard digit conditioning applied to the encoding block). This build TESTS the cascade, it does not tune it.",
+  "hosts": "the six Build-10 host channels (frozen selection rule of run hard10), capped 15000 records each; replacement targets restricted to records whose 2*5-quotient core >= 300 (a 2-4-factor quotient product needs magnitude; logged, grid-respecting by construction)",
+  "stage1_quotient_spikein": {
+    "construction": {
+      "tier_a_naive": "value = g0 * Q, g0 = the host's modal grid 10^mode(trailing-10 depth > 0); Q = product of 2 factors coprime to 10, magnitude sampled iid from the host's marginal 2*5-quotient-core magnitude distribution",
+      "tier_b_magnitude_matched": "per-record core replacement: v' = G_i * Q with G_i = 2^a2 * 5^a5 of a sampled host record (its exact grid part kept) and log10(Q) matched to that record's quotient core (+-0.04 jitter); Q = product of 2 factors coprime to 10",
+      "tier_c_base_matched_adversarial": "as tier b, plus Q = 3^b3 * 7^b7 * R with (b3,b7) sampled from the host's empirical joint deep-core (a3,a7) exponent distribution and R = balanced product of 2 factors coprime to 210 (survives the <=7 strip as a composite of primes > 7)"
+    },
+    "fractions": [0.01, 0.05, 0.1, 0.25],
+    "replicates": 15,
+    "detection": "STRIPPED-CORE multiplicative statistics only: keff_core_c7 (primary, direction up) and dTail_core_c7 (up), each vs the channel's own f=0 record-bootstrap q95 (R=400, n-matched); channel recovered at f iff the median over replicates of keff_core_c7 exceeds q95",
+    "confound_check": "mandatory: encoding coordinates of each injected SET (rounding_mass, trailing-10 depth mean, TV mod 100, c2_share, c5_share) z-scored against host record-bootstrap samples of the same size; tier passes iff max|z| < 3; a tier that drifts is CONFOUNDED and reported as such",
+    "retrospective": "the Build-10 off-grid unrounded injection re-run once at f=0.10 with the same confound table plus injected-vs-host core-digit comparison, to quantify how much of the original recovery co-occurred with encoding drift",
+    "decision_rule": "POWERED iff tier b (grid-respecting, magnitude-matched) is recovered at some f <= 0.10 in >= 4/6 channels on the stripped-core statistics AND tier b passes the confound check in those channels; otherwise the powered-null claim reframes as DERIVATION-PLUS-ILLUSTRATION. Tier c is the adversarial bound, reported either way; tier a reported."
+  },
+  "stage2_balanced_pairs": {
+    "construction": "grid-respecting core replacement (as tier b) with Q = p*q, p and q primes with log p ~= log q (balanced, |log10 p - log10 q| <= 0.1), magnitudes matched to the host's quotient cores; primes drawn from precomputed per-0.1-dex prime pools",
+    "fractions": [0.05, 0.1, 0.25],
+    "replicates": 10,
+    "battery": "full-profile on stripped (<=7) cores: PRIMARY = per-channel energy distance of padded sorted core profiles to a fixed uniform-integer core reference cloud (direction up); reported alongside: mean core atom count (down), mean core Tail (down), mean core L3 (down); keff_core reported (expected only PARTIALLY blind here - registered caveat below)",
+    "registered_caveat_keff": "the H2 = 1/2 identity is asymptotic: E[H2|d] -> 1/2 only as d grows; at the host quotient-core magnitudes in play (core_d ~ 3-8) E[H2|d] = 0.64-0.89 > 1/2, so keff may partially see balanced pairs at these magnitudes; the blind-spot statement in the paper is a large-d statement and will be corrected to say so",
+    "h2_arithmetic": "for distinct p,q: with l1 = ln p / ln n >= 1/2, H2 = 1/2 + 2(l1 - 1/2)^2 > 1/2 strictly; the 'identity' is the balanced limit; the build quantifies distance from the null band as a function of imbalance",
+    "decision_rule": "the H2-mimic gap is CLOSED iff the PRIMARY battery statistic (energy distance) detects balanced-pair injections (median over replicates > f=0 bootstrap q95) at some f <= 0.10 in >= 4/6 channels; keff behavior reported without bearing on the rule"
+  },
+  "stage3_naive_benchmark": {
+    "naive_battery": "(a) last-digit histogram chi2 vs the host reference half; (b) trailing-zero-count distribution chi2 vs reference; (c) last-two-digit (mod 100) chi2 vs reference (the duplication/number-test tradition)",
+    "encoding_score": "max |z| over {rounding_mass, trailing-10 depth, frac on host modal grid, c2_share, c5_share, TV mod 25, TV mod 49, TV mod 47, TV mod 43, digit-conditioned rounding-mass split (|rm(lower-magnitude half) - rm(upper half)| - the project's standard digit conditioning)}; z-scored on 200 clean calibration windows",
+    "windows": "w = min(1000, floor(n_clean/3)); 100 clean vs 100 test windows per cell; AUC by rank",
+    "contrasts": [
+      "ces_persons_vs_qcew_state (existing provenance result - tie expected, reported)",
+      "acs_estimate_vs_census2020 (both may fail - reported)",
+      "acs_moe_vs_census2020 (the carrying result)",
+      "b10_offgrid_injection f=0.10 on host 1, real-donor and leading-digit-matched adversarial (ties on obvious grids expected)",
+      "subtle_tick_47_vs_43: host = real channel re-quantized to a 47-tick, foreign = the same values on a 43-tick, f=0.10 windows - neither grid announces itself mod 10/100 (both coprime to 100); prediction: naive fails (AUC < 0.6), encoding reads the tick via residue TV mod 47/43",
+      "subtle_mixed_era: host = two precision eras correlated with magnitude (dollar-rounded low-magnitude era + cent-precision recent era); foreign = marginal-matched but magnitude-independent precision; prediction: naive marginal tests tie out, digit-conditioned rounding mass fires"
+    ],
+    "decision_rule": "the encoding channel ADDS VALUE iff there exists >= 1 contrast where max(naive AUCs) < 0.6 AND encoding AUC >= 0.8; ties on obvious grids are expected and reported without spin; if no such contrast exists the channel is reported as REDUNDANT-WITH-NAIVE on the tested set"
+  },
+  "hygiene": "fully autonomous; frozen rules before computation; deviations logged to run_config_power13_acquisition.json and continued; figures PNG dpi 200; seeds + workers recorded"
+}
