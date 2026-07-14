@@ -1,0 +1,77 @@
+{
+  "run_id": "geo15",
+  "label": "L1/L3 geography disposition (EXPLORATORY - no frozen confirmatory rule applies)",
+  "date_frozen": "2026-07-12",
+  "seed": 20260715,
+  "registration_status": "exploratory",
+  "notes": [
+    "This build supports the v10 manuscript restructure. It re-examines the",
+    "unresolved L1-vs-L3 Cartesian geography at three observational levels",
+    "(per-record subsample, channel, family) and runs four blocks:",
+    "A raw geography, B controlled/residual geography, C held-out incremental",
+    "information, D mechanism stress. It reuses the frozen v2 corpus features,",
+    "the frozen digit-conditioned baseline (tables/baseline.csv, seed 20260702),",
+    "and the core-magnitude baseline (tables/baseline_coremag.csv). No frozen",
+    "confirmatory decision rule covers this analysis; the retention threshold",
+    "below is a project-management rule, not a scientific criterion."
+  ],
+  "disposition_rule_frozen_before_results": {
+    "1_disappears_after_controls": "raw-vs-controlled collapse becomes a principal figure; raw geography interpreted as magnitude + recording",
+    "2_survives_only_exact": "compact exact-integer contrast in main text; extended geography to supplement; no generalization to administrative records",
+    "3_survives_in_recorded": "revise four-driver claim; identify surviving information; require replication across independent source families before any main-text claim",
+    "4_L3_no_heldout_value": "no substantive claim that L1/L3 topology is independently informative; the collapse itself may remain the result",
+    "retention_threshold_deltaAUC": 0.05,
+    "retention_threshold_status": "project-management rule (no pre-existing frozen criterion applies)"
+  },
+  "inputs": {
+    "features": "frozen/ml_features.csv",
+    "labels": "frozen/ml_labels.csv",
+    "encoding": "frozen/encoding_features.csv",
+    "profiles": "tables/channel_profiles_v3.csv",
+    "residue": "tables/residue_structure.csv",
+    "baseline_digit": "tables/baseline.csv",
+    "baseline_coremag": "tables/baseline_coremag.csv",
+    "corpus": "frozen/observational_corpus_v2.csv"
+  },
+  "null_cloud": {
+    "strata": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    "channels_per_stratum": 15,
+    "records_per_channel": 800,
+    "consistency_tolerance_vs_frozen_baseline": 0.02
+  },
+  "per_record_sample": {
+    "max_families_per_domain": 6,
+    "max_channels_per_family": 2,
+    "max_records_per_channel": 1500,
+    "availability": "only sources present on disk (direct path or surviving Archive zip)"
+  },
+  "exact_constructions": {
+    "factorials": "n in 60..600 step 20 (closed-form Legendre exponents)",
+    "central_binomials": "C(2n,n), n in 60..600 step 20 (Legendre differences)",
+    "balanced_products": "2-4 random primes, value <= 1e12, 120 values per channel",
+    "additive_controls": "sums of 12 uniforms and Poisson tallies, magnitude-matched"
+  },
+  "controls_sequence": [
+    "S0 raw (L1, L3)",
+    "S1 digit-length residuals (dL1, dL3) against frozen E[.|d] with channel digit weights",
+    "S2 decimal-prime (c2/c5) strip: de-rounded coords (stored dL1_der,dTail_der corpus-wide; dL3_der recomputed on subsample)",
+    "S3 modal-grid divide-out (lattice_gcd quotient; subsample)",
+    "S4 residue-quantization conditioning (residualize on resonance_score, log lattice_gcd)",
+    "S5 deep strip primes<=7 against core-magnitude baseline (subsample)"
+  ],
+  "heldout": {
+    "grouping": "dataset_family (GroupKFold, 5 folds)",
+    "primary_target": "domain (macro one-vs-rest AUC)",
+    "secondary_target": "channel_kind in {count, amount} (binary AUC)",
+    "feature_sets": {
+      "R": ["mean_log10_digits", "sd_log10_digits", "rounding_mass", "v3_share", "decimals", "tick_log10", "resonance_score", "log10_lattice_gcd"],
+      "R_L1": ["...R", "L1"],
+      "R_L1_L3": ["...R", "L1", "L3"],
+      "R_full_profile": ["...R", "L1", "L2", "L3", "Tail", "H2", "keff"]
+    },
+    "uncertainty": "family-grouped bootstrap of pooled out-of-fold predictions, 500 resamples, 90% CI",
+    "model": "sklearn HistGradientBoostingClassifier, default params, class-imbalance noted"
+  },
+  "stress_transforms": ["identity", "plus1", "round10", "round100", "grid_quotient", "strip7"],
+  "outputs_prefix": "tables/geo15_"
+}

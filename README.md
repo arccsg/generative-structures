@@ -1,4 +1,4 @@
-# Artifact — "Reading the Recording Pipeline" (JDIQ submission)
+# Artifact — L-profile recording-pipeline paper (v10: "When Numerical Structure Reads the Recording Pipeline")
 
 This artifact contains the frozen configurations, decision-rule manifests,
 analysis scripts, generated claim tables, figures, and deviation log for
@@ -72,3 +72,27 @@ The same five steps verify any row of `claim_manifest.csv`.
 - Two large raw panels (`emp11_panel.csv`, `vote14_panel.csv`, ~4 MB each)
   are bundled; the ~1.9 GB of intermediate corpus tables are not, but every
   one is hashed and sized in `tables/MANIFEST.sha256`.
+
+
+## v10 additions (JSSAM restructure, 2026-07)
+
+The v10 manuscript restructure added one **exploratory** build and the
+main-text figure scripts:
+
+- `scripts/stage22_geo15.py` + `scripts/test_geo15.py` + `configs/run_config_geo15.json` —
+  the L1/L3 geography disposition (Blocks A--D: raw geography, controlled
+  geography, family-grouped held-out ladders, mechanism stress). The analysis
+  plan and disposition rule were frozen in the config **before** results were
+  computed; no confirmatory frozen rule covers this build and it is labeled
+  exploratory throughout (seed 20260715).
+- `tables/geo15_*.csv` — its outputs (geography, controlled stages and
+  channels, held-out AUC ladders, stress, per-record structural-zero sample).
+- `scripts_v10/` — scripts regenerating main-text Figures 1--6 from the
+  bundled tables (see `scripts/SCRIPTS.md`).
+- Additional bundled source tables for the figures: `baseline.csv`,
+  `derounding_effect.csv`, `deepstrip_effect.csv`, `resonance_controls.csv`,
+  `family_profiles_v3.csv`, `residue_structure.csv`.
+
+The frozen v8-era artifact content above (claim manifest, decision rules,
+configs, tables, figures, hashes) is unchanged except that
+`hashes/SHA256SUMS` now also covers the added files.

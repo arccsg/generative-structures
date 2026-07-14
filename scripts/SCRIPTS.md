@@ -34,3 +34,23 @@ build14.md) and `../manifests/decision_rules.csv` for the frozen rules.
 | `stage7_resolve01d.py` | domain/family resolution (Build 01d; paths anonymized) | `e0803ba199cf9793` |
 | `stage8_build02.py` | baseline + corpus factorization (Build 02) | `0be7e975b1345a51` |
 | `stage9_build03.py` | de-rounding decomposition + clustering teardown (Build 03; Sec 3) | `d667e99b47d7a020` |
+| `stage22_geo15.py` | L1/L3 geography disposition, Blocks A--D (Build geo15, **exploratory**; v10 Secs 4--6) | `596c9c0714d20b19` |
+| `test_geo15.py` | unit tests for stage22_geo15 (structural zeros, transforms, residuals) | `ee0dee88579c9723` |
+
+## scripts_v10/ — main-text figure scripts (v10 manuscript)
+
+Each script regenerates one main-text figure from the bundled tables
+(deterministic; style in `figstyle.py`). `fig6_exact.py` additionally reads
+`frozen/observational_corpus_v2.csv` from the private analysis tree (hash in
+the freeze manifest) to restrict the recorded-family row to the 367
+frozen-corpus families.
+
+| script | figure | hash16 |
+|---|---|---|
+| `scripts_v10/figstyle.py` | shared style (paths anonymized) | `4a991258d96e5e79` |
+| `scripts_v10/fig1_cvap.py` | Fig 1 CVAP false alarm + five-grid attribution | `f595d0e92f2e91b6` |
+| `scripts_v10/fig2_geography.py` | Fig 2 raw vs controlled (L1,L3) geography | `6192b1fa178fd4f8` |
+| `scripts_v10/fig3_waterfall.py` | Fig 3 four-driver removal + residue controls | `6493acdc773eb58d` |
+| `scripts_v10/fig4_mechanism_power.py` | Fig 4 destruction + quotient spike-in power | `559d66fc7c45cfa1` |
+| `scripts_v10/fig5_acs.py` | Fig 5 ACS margin-of-error localization | `1a2efb4c6ba5feb2` |
+| `scripts_v10/fig6_exact.py` | Fig 6 exact-integer positive contrast | `26ed85b2e494801d` |

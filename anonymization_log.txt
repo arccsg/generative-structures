@@ -10,3 +10,8 @@ Files modified during anonymization (3):
   scripts/build02_lib.py: 1 username/path token(s) stripped
   scripts/common.py: 1 username/path token(s) stripped
   scripts/stage7_resolve01d.py: 1 username/path token(s) stripped
+
+v10 additions (2026-07):
+  scripts_v10/figstyle.py: 1 username/path token(s) stripped (Rule 1).
+  All other added scripts/configs/tables verified to contain no username,
+  machine identifier, or author-identifying path.
