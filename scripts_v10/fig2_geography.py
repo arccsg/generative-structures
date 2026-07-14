@@ -74,8 +74,15 @@ ax1.set_xlim(0.2, 1.0)
 ax1.set_ylim(-0.012, 0.35)
 
 order = ["S0_raw", "S1_digit", "S2_deround", "S4_residue"]
-names = ["raw\n$(L_1,L_3)$", "digit-length\nresiduals", "+ $2\\cdot5$\nstrip",
-         "+ residue\nconditioning"]
+chn = pd.read_csv(os.path.join(fs.TAB, "geo15_controlled_channels.csv"))
+stage_cols = {"S0_raw": ["L1", "L3"], "S1_digit": ["g15_dL1", "g15_dL3"],
+              "S2_deround": ["dL1_der", "dTail_der"],
+              "S4_residue": ["g15_dL1_der_resid", "g15_dTail_der_resid"]}
+nfam = {k: chn.dropna(subset=v).dataset_family.nunique()
+        for k, v in stage_cols.items()}
+base_names = ["raw\n$(L_1,L_3)$", "digit-length\nresiduals", "+ $2\\cdot5$\nstrip",
+              "+ residue\nconditioning"]
+names = [f"{b}\n({nfam[o]} fam.)" for b, o in zip(base_names, order)]
 c = ctl.set_index("stage").loc[order]
 x = np.arange(len(order))
 ax2.errorbar(x, c.macro_auc, yerr=[c.macro_auc - c.auc_lo,

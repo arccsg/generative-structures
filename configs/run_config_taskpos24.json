@@ -1,0 +1,44 @@
+{
+ "registration_status": "exploratory",
+ "date_frozen": "2026-07-14",
+ "note": "Analysis plan and decision rule frozen before computation (geo15-style). Thresholds are project-management rules, not preregistered criteria. Seed labels follow the project's date-like naming convention; they are labels, not timestamps.",
+ "run_id": "taskpos24",
+ "seed": 20260717,
+ "label": "TEST 2: task-sensitivity positive control for the family-grouped domain-transfer design",
+ "design": "synthetic pseudo-channels: 150 families x 3 channels x 600 records, family magnitude d~Unif{4..8}; class B = recording treatment; identical GroupKFold(5) macro-AUC pipeline as geo15",
+ "effect_levels": [
+  [
+   "null",
+   0,
+   0
+  ],
+  [
+   "grid10_w10",
+   10,
+   0.1
+  ],
+  [
+   "grid10_w30",
+   10,
+   0.3
+  ],
+  [
+   "grid10_full",
+   10,
+   1.0
+  ],
+  [
+   "grid100_full",
+   100,
+   1.0
+  ],
+  [
+   "tick7_w50",
+   7,
+   0.5
+  ]
+ ],
+ "permutation_null": "family-level label permutation, 20 draws, on the largest-effect condition",
+ "diagnostics": "per-fold AUC, per-fold family and class counts for the real geo15 S1 stage",
+ "sensitivity_rule": "design is task-sensitive iff AUC >= 0.8 at grid100_full and AUC is nondecreasing in measured grid-mass shift within 0.05 tolerance; permutation AUCs within [0.4,0.6]"
+}

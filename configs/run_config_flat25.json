@@ -1,0 +1,15 @@
+{
+ "registration_status": "exploratory",
+ "date_frozen": "2026-07-14",
+ "note": "Analysis plan and decision rule frozen before computation (geo15-style). Thresholds are project-management rules, not preregistered criteria. Seed labels follow the project's date-like naming convention; they are labels, not timestamps.",
+ "run_id": "flat25",
+ "seed": 20260718,
+ "label": "TEST 3: local-flatness stress simulation",
+ "design": "x~Exponential(scale=r*g), grids g in {10,100}, curvature ratios r in {0.5,1,2,5,10,50}; plus zero-inflated Poisson(lambda=30, 60% zeros) on g=10; N=40000 per cell",
+ "measures": [
+  "quotient c2/c5 log-share vs generic",
+  "quotient keff vs digit-matched null",
+  "post-de-round dL1 residual (does the reduction absorb it)"
+ ],
+ "adequacy_rule": "local flatness adequate at ratio r iff |quotient dL1 residual| < 2 null SE; name failure regimes and bias direction below that"
+}

@@ -1,0 +1,29 @@
+{
+ "registration_status": "exploratory",
+ "date_frozen": "2026-07-14",
+ "note": "Analysis plan and decision rule frozen before computation (geo15-style). Thresholds are project-management rules, not preregistered criteria. Seed labels follow the project's date-like naming convention; they are labels, not timestamps.",
+ "run_id": "loso23",
+ "seed": 20260716,
+ "label": "TEST 1: leave-one-source-out robustness of the four-driver reduction and core-magnitude residual",
+ "inputs": [
+  "tables/hunt09_residual_rebaseline.csv",
+  "tables/channel_profiles_v3.csv",
+  "frozen/observational_corpus_v2.csv"
+ ],
+ "arm_domains": [
+  "equity_markets",
+  "seismology",
+  "real_estate",
+  "procurement",
+  "food_nutrition"
+ ],
+ "variants": [
+  "full (reproduction)",
+  "excl_network_telemetry",
+  "excl_procurement",
+  "excl_census",
+  "equal_family_weighting"
+ ],
+ "bootstrap": "2000 family resamples, 5/95 percentiles (matches frozen hunt09 recipe)",
+ "holds_rule": "HOLDS iff, in every variant: (a) the arm-domain core-magnitude residual 90% family-bootstrap CI contains 0 OR |mean| < 0.005; (b) driver sign structure unchanged: raw arm dTail > +0.02, de-rounded and deep-strip residuals in (-0.05, +0.005), |core-indexed| < 0.005. Report per-domain family counts beside every corpus-level claim."
+}

@@ -1,0 +1,20 @@
+{
+ "registration_status": "exploratory",
+ "date_frozen": "2026-07-14",
+ "note": "Analysis plan and decision rule frozen before computation (geo15-style). Thresholds are project-management rules, not preregistered criteria. Seed labels follow the project's date-like naming convention; they are labels, not timestamps.",
+ "run_id": "count26",
+ "seed": 20260719,
+ "label": "TEST 4: quotient-level spike-in on count-kind hosts (extends power13 tier-b design)",
+ "host_rule": "count-kind channels of the frozen corpus, file available on disk, n_records>=3000, median value>=1e5, eligible cores (kappa_c7>=300) >= 500; take top 3 by eligible count across distinct families (frozen BEFORE looking at recovery)",
+ "injection": "tier (b) magnitude-matched in place: v' = G_i * Q_i, G_i = 2^v2 5^v5 of the host record, Q_i balanced 2-prime product coprime to 10 at the record's own core magnitude",
+ "mixture_grid": [
+  0.01,
+  0.05,
+  0.1,
+  0.25
+ ],
+ "replicates": 10,
+ "detection": "replicate-median keff_core_c7 > channel's own f=0 record-bootstrap 95th percentile (R=200, n-matched; lighter than power13's R=400 - exploratory)",
+ "confound": "11 grid coordinates z-scored vs 200 host bootstraps at f=0.10; clean iff max|z|<3",
+ "holds_rule": "count-host recovery HOLDS iff >= half of hosts recovered at f<=0.10 with clean confound; EITHER outcome is reported and scopes Section 7"
+}

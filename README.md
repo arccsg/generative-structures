@@ -96,3 +96,14 @@ main-text figure scripts:
 The frozen v8-era artifact content above (claim manifest, decision rules,
 configs, tables, figures, hashes) is unchanged except that
 `hashes/SHA256SUMS` now also covers the added files.
+
+## v10.3 additions (review round 1, 2026-07)
+
+Exploratory stages 23--28 (configs `run_config_{loso23,taskpos24,flat25,count26,gate27,powerfp28}.json`,
+each frozen before its computation; seeds 20260716--21 are labels, not
+timestamps): leave-one-source-out robustness, a task-sensitivity positive
+control for the grouped-transfer design, a local-flatness stress simulation,
+count-kind spike-in hosts, the fabricated-and-gridded co-occurrence example,
+assembled power/false-positive curves, and the ground-truth gate validation
+library (`gate27_library.csv`; sensitivity 6/7, specificity 5/6, misses
+explained). Outputs under `tables/` with the matching prefixes.

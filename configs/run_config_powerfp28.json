@@ -1,0 +1,14 @@
+{
+ "registration_status": "exploratory",
+ "date_frozen": "2026-07-14",
+ "note": "Analysis plan and decision rule frozen before computation (geo15-style). Thresholds are project-management rules, not preregistered criteria. Seed labels follow the project's date-like naming convention; they are labels, not timestamps.",
+ "run_id": "powerfp28",
+ "seed": 20260721,
+ "label": "TEST 6: power curves and false-positive calibration assembled from frozen power13 outputs (+ count26 hosts)",
+ "inputs": [
+  "tables/power13_quotient_spikein.csv",
+  "tables/geo26_count_spikein.csv (from count26)"
+ ],
+ "fp_calibration": "realized exceedance of the f=0 95th-percentile band across f=0 replicates per host (nominal 0.05)",
+ "note2": "assembly only for power13 - no frozen output recomputed"
+}

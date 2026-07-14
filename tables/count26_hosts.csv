@@ -1,0 +1,4 @@
+dataset_id,domain,family,n,eligible
+cp-discovery__259-csv__n-bytes__1cf6c29e,network_telemetry,cp-discovery__x__x__1d0c02,8000,7930
+audit-analytics__259-csv__n-bytes__71ce5e4b,network_telemetry,audit-analytics__institutions-agg-10-minutes__x__1d0c02,8000,7922
+archive__68-csv__n-bytes__d3088831,network_telemetry,archive__cbad-public-institutions-agg-10-minutes__x__1d0c02,8000,8000

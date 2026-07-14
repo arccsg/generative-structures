@@ -1,0 +1,39 @@
+{
+ "registration_status": "exploratory",
+ "date_frozen": "2026-07-14",
+ "note": "Analysis plan and decision rule frozen before computation (geo15-style). Thresholds are project-management rules, not preregistered criteria. Seed labels follow the project's date-like naming convention; they are labels, not timestamps.",
+ "run_id": "gate27",
+ "seed": 20260720,
+ "label": "TEST 5 + TEST 7: co-occurrence adversarial worked example and ground-truth grid library",
+ "test5": "fabricated-and-gridded: x~lognormal(mu=9,sigma=1), N=3000, rounded to nearest 5; run the two-step gate; expected report is grid-compatible -- the gate attributes the ALARM, not the DATA",
+ "test7_library": {
+  "documented_grid": [
+   "CVAP county (five-grid)",
+   "CES survey vintages (hundreds-grid, value_thousands*1000... stored in thousands with one decimal -> integer hundreds)",
+   "ACS MOE column (published rounding)",
+   "binary-aligned allocations (factor-2 grid)",
+   "constructed 47-tick",
+   "constructed 43-tick"
+  ],
+  "non_grid": [
+   "county presidential totals 2020",
+   "county presidential totals 2024",
+   "NC precinct 2024",
+   "decennial-style county population counts (co-est2019 CENSUS2010POP)",
+   "additive synthetic controls (sums)",
+   "uniform-integer null"
+  ]
+ },
+ "modulus_set": [
+  4,
+  8,
+  25,
+  49,
+  100,
+  47,
+  43
+ ],
+ "g0_recipe": "largest g in {2,4,5,10,20,25,50,100,200,250,500,1000} with conformance >= 0.90; else 1",
+ "flag_rule": "GRID-COMPATIBLE iff any residue TV excess over the magnitude-matched uniform null >= 0.05 at m in the modulus set, or g0 > 1; sensitivity = flagged fraction of documented-grid series, specificity = unflagged fraction of non-grid series",
+ "null_recipe": "uniform integers matched to the series' digit-length histogram, 20 draws, seeded"
+}

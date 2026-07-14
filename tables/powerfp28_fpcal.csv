@@ -1,0 +1,10 @@
+dataset_id,n_reps,realized_fp,source
+archive__real-estate-sales-2001-2023-gl-csv__sale-amount__f692a799,1.0,0.0,power13 f=0 replicates
+cbad-audit__fy2022-all-assistance-full-20260307-9-cs__total-outlayed-amount-for-overall-award__01b22c39,1.0,0.0,power13 f=0 replicates
+cp-discovery__cook-sale-price-parquet__market-value__fd729316,1.0,0.0,power13 f=0 replicates
+cp-discovery__ct-assess-av-parquet__assessed-value__c22984b3,1.0,0.0,power13 f=0 replicates
+cp-discovery__williamson-asmt-2025-csv__assessed__ab51c4d2,1.0,0.0,power13 f=0 replicates
+waterfall-msa-deployed__real-estate-normalized-csv__amount__07db20b3,1.0,0.0,power13 f=0 replicates
+archive__68-csv__n-bytes__d3088831,,,count26: q95 defined as 95th pct of R=200 f=0 bootstrap (nominal 0.05 by construction)
+audit-analytics__259-csv__n-bytes__71ce5e4b,,,count26: q95 defined as 95th pct of R=200 f=0 bootstrap (nominal 0.05 by construction)
+cp-discovery__259-csv__n-bytes__1cf6c29e,,,count26: q95 defined as 95th pct of R=200 f=0 bootstrap (nominal 0.05 by construction)

@@ -54,3 +54,14 @@ frozen-corpus families.
 | `scripts_v10/fig4_mechanism_power.py` | Fig 4 destruction + quotient spike-in power | `559d66fc7c45cfa1` |
 | `scripts_v10/fig5_acs.py` | Fig 5 ACS margin-of-error localization | `1a2efb4c6ba5feb2` |
 | `scripts_v10/fig6_exact.py` | Fig 6 exact-integer positive contrast | `26ed85b2e494801d` |
+
+## v10.3 exploratory stages (review round 1; plans frozen before results)
+
+| script | role | hash16 |
+|---|---|---|
+| `stage23_loso.py` | TEST 1: leave-one-source-out robustness of the reduction + core collapse | `b2f0f7226e43af49` |
+| `stage24_taskpos.py` | TEST 2: task-sensitivity positive control + S1-stage fold diagnostics | `c09e40293fdd1053` |
+| `stage25_flatness.py` | TEST 3: local-flatness stress (failure regimes) | `9c6bcd89a1f72b91` |
+| `stage26_counthosts.py` | TEST 4: count-kind quotient spike-in hosts | `0e1d99333d3a9cda` |
+| `stage27_gate.py` | TESTS 5+7: co-occurrence example + ground-truth gate library | `b5b2758e6b38c4af` |
+| `stage28_powerfp.py` | TEST 6: power curves + FP calibration (assembly from frozen power13) | `15da9b093e9bc63d` |
