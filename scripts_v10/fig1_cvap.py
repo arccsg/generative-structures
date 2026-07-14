@@ -53,7 +53,7 @@ for name, flt, label, color in SERIES:
     f, n = last_digit_freq(flt)
     chi2 = bs.loc[name, "bs_chi2"]
     lbl = (f"{label}\n$\\chi^2_9$ = {chi2:,.0f}" if chi2 > 100
-           else f"{label}  ($\\chi^2_9$ = {chi2:.1f}, passes)")
+           else f"{label.replace(')', '')}; $\\chi^2_9$ = {chi2:.1f}, passes)")
     ax1.plot(x, f, marker=markers[name], ms=4.5, color=color, label=lbl,
              linestyle="-" if name.startswith("cvap") else "--",
              zorder=3 if name.startswith("cvap") else 2)
@@ -79,7 +79,7 @@ ax2.barh(y - 0.19, w100, height=0.34, color=fs.VERM, alpha=0.45,
 ax2.axvline(0, color="#444444", lw=0.8)
 ax2.set_yticks(y, labels)
 ax2.set_xlabel("residue excess vs magnitude-matched null")
-ax2.set_title("(b) the five-grid signature attributes it")
+ax2.set_title("(b) the five-grid signature explains it")
 ax2.legend(loc="lower right", frameon=False)
 for yy, v in zip(y, w25):
     if v > 0.1:

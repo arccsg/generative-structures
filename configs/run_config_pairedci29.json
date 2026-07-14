@@ -1,0 +1,10 @@
+{
+ "run_id": "pairedci29",
+ "seed": 20260722,
+ "date_frozen": "2026-07-14",
+ "registration_status": "exploratory",
+ "label": "B2 (v10.4): paired family-bootstrap CIs for the Table S1 ladder deltas",
+ "design": "rerun the geo15 Block C ladders (identical features, folds, model, exclusions); pool OOF probabilities; for each bootstrap draw resample FAMILIES once and evaluate all ladders on the same resample; report 90% CIs for each delta (vs R and vs R+L1)",
+ "n_boot": 500,
+ "note": "Exploratory; no frozen confirmatory rule; seed label convention (not a timestamp). Complements, does not replace, the frozen geo15_heldout_auc.csv point estimates."
+}

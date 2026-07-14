@@ -46,7 +46,7 @@ ax1.set_title("(a) one additive or quantizing step empties the window")
 
 tiers = [("b_magmatch", "host-matched (grid, magnitude)", fs.BLUE, "o", "-"),
          ("c_basematch", "adversarial (+ small-prime joint)", fs.VERM, "s", "--"),
-         ("a_naive", "naive (off-grid; confounded)", fs.GRAY, "^", ":")]
+         ("a_naive", "naive (grid-placed, not in-place; confounded)", fs.GRAY, "^", ":")]
 # the f=0 bootstrap threshold lives on the tier="none" rows, per channel
 q95 = spk[spk.tier == "none"].groupby("dataset_id").keff_core_q95.first()
 for tier, lbl, col, mk, ls in tiers:

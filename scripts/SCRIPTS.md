@@ -65,3 +65,4 @@ frozen-corpus families.
 | `stage26_counthosts.py` | TEST 4: count-kind quotient spike-in hosts | `0e1d99333d3a9cda` |
 | `stage27_gate.py` | TESTS 5+7: co-occurrence example + ground-truth gate library | `b5b2758e6b38c4af` |
 | `stage28_powerfp.py` | TEST 6: power curves + FP calibration (assembly from frozen power13) | `15da9b093e9bc63d` |
+| `stage29_pairedci.py` | v10.4: paired family-bootstrap CIs for the transfer-ladder deltas | `2d76d0a9afcc30ba` |

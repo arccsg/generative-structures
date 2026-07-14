@@ -6,7 +6,7 @@ magnitude re-indexing. The last step is the reference correction that removes
 the surviving concentration excess (-0.0184 -> -0.0001).
 (b) Residue quantization, the fourth driver: planted resonant controls vs
 planted generic controls vs observed channels (resonance score), showing the
-10-30x separation of the negative-control validation.
+~9-30x separation of the negative-control validation.
 
 Sources (frozen, hashed): tables/derounding_effect.csv, deepstrip_effect.csv,
 hunt09_residual_rebaseline.csv + claim C09 (-0.0184 -> -0.0001, CI
@@ -25,15 +25,25 @@ dstr = pd.read_csv(os.path.join(fs.TAB, "deepstrip_effect.csv"))
 rc = pd.read_csv(os.path.join(fs.TAB, "resonance_controls.csv"))
 rs = pd.read_csv(os.path.join(fs.TAB, "residue_structure.csv"))
 
-# arm domains: the rounded arm = domains with high rounding mass
-arm = der[der.mean_rounding_mass > 0.25]
-w = arm.families / arm.families.sum()
-raw = float((arm.mean_dTail_raw * w).sum())
-derd = float((arm.mean_dTail_derounded * w).sum())
-darm = dstr[dstr.domain.isin(arm.domain)]
-w2 = darm.families / darm.families.sum()
-strip7 = float((darm.mean_dTail_7strip * w2).sum())
-CORE_BEFORE, CORE_AFTER, CORE_LO, CORE_HI = -0.0184, -0.0001, -0.0004, 0.0004
+# arm domains: the FROZEN hunt09 arm set, at family-equal grain -- the same
+# estimand as the supplement's LOSO analysis (loso23_results.csv, variant
+# "full"), so figure and text print identical numbers.
+ARM = ["equity_markets", "seismology", "real_estate", "procurement",
+       "food_nutrition"]
+cp = pd.read_csv(os.path.join(fs.TAB, "channel_profiles_v3.csv"),
+                 usecols=["dataset_family", "domain", "dTail", "dTail_der"])
+oc = pd.read_csv(os.path.join(fs.GEO, "frozen", "observational_corpus_v2.csv"),
+                 usecols=["dataset_family"])
+cp = cp[cp.dataset_family.isin(set(oc.dataset_family))]
+famcp = cp.groupby(["dataset_family", "domain"], as_index=False)[
+    ["dTail", "dTail_der"]].mean()
+armc = famcp[famcp.domain.isin(ARM)]
+h9 = pd.read_csv(os.path.join(fs.TAB, "hunt09_residual_rebaseline.csv"))
+arm9 = h9[h9.domain.isin(ARM)]
+raw = float(armc.dTail.mean())
+derd = float(armc.dTail_der.mean())
+strip7 = float(arm9.dTail_d7.mean())
+CORE_BEFORE, CORE_AFTER, CORE_LO, CORE_HI = strip7, -0.0001, -0.0004, 0.0004
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(fs.FULL, 3.15),
                                gridspec_kw=dict(width_ratios=[1.25, 1]))
@@ -48,15 +58,14 @@ ax1.errorbar([3], [CORE_AFTER], yerr=[[CORE_AFTER - CORE_LO], [CORE_HI - CORE_AF
              fmt="none", ecolor="#333333", capsize=3, lw=1)
 for xi, v in zip(x, vals):
     ax1.text(xi, v - 0.004 if v > 0.02 else v + (0.0025 if v >= 0 else -0.003),
-             f"{v:+.4f}" if abs(v) < 0.001 else f"{v:+.3f}",
+             f"${v:+.4f}$" if abs(v) < 0.001 else f"${v:+.3f}$",
              ha="center",
              va="top" if v > 0.02 else ("bottom" if v >= 0 else "top"),
              fontsize=7.5, color="white" if v > 0.02 else "black")
-ax1.set_ylim(-0.028, 0.088)
-ax1.annotate("", xy=(2.97, -0.004), xytext=(2.6, 0.030),
+ax1.set_ylim(-0.030, 0.104)
+ax1.annotate("", xy=(2.95, -0.004), xytext=(2.45, 0.034),
              arrowprops=dict(arrowstyle="->", color="#666666", lw=0.9))
-ax1.text(1.52, 0.036, "deep-core excess $-0.0184$\nsurvives the strips, then\n"
-                      "collapses under its own\ncore-magnitude reference",
+ax1.text(1.30, 0.040, "the deep-core excess $-0.0184$\n(the strip-stage bar) collapses\nunder its own core-magnitude\nreference",
          fontsize=7, color="#444444")
 ax1.axhline(0, color="#444444", lw=0.8)
 ax1.set_xticks(x, stages)

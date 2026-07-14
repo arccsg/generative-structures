@@ -19,8 +19,8 @@ import matplotlib.pyplot as plt
 acs = pd.read_csv(os.path.join(fs.TAB, "whisp12_acs.csv")).set_index("cross_section")
 
 rows = [
-    ("census2020_count", "decennial census count\n(enumerated, $n$=3144 counties)", fs.BLUE),
-    ("acs5yr_estimate", "ACS 5-yr point estimate\n(modeled, $n$=3144)", fs.GRAY),
+    ("census2020_count", "decennial census count\n(enumerated, $n$=3,144 counties)", fs.BLUE),
+    ("acs5yr_estimate", "ACS 5-yr point estimate\n(modeled, $n$=3,144)", fs.GRAY),
     ("acs5yr_MOE", "ACS margin of error\n(published, $n$=125)", fs.VERM),
 ]
 
