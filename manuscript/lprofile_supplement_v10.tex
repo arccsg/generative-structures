@@ -1,0 +1,731 @@
+%% Supplement to "When Numerical Structure Reads the Recording Pipeline"
+%% (lprofile_paper_v10_recording.tex). First standalone supplement source;
+%% consolidates technical material previously in the main text (v9) plus the
+%% exploratory Build geo15 detail. All frozen results unchanged; sources in
+%% artifact/claim_manifest.csv and RESULT_PROVENANCE.md.
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{natbib}   %% ASA author-date (JSSAM)
+\setcitestyle{round,aysep={}}
+\usepackage{url}
+
+\newcommand{\keff}{k_{\mathrm{eff}}}
+\newcommand{\rmass}{\rho}
+\newcommand{\gdepth}{\tau}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thealgorithm}{S\arabic{algorithm}}
+\renewcommand{\theequation}{S\arabic{equation}}
+
+\title{Supplement to ``When Numerical Structure Reads the Recording Pipeline:
+A Boundary for Factorization-Based Data Analysis''}
+\author{}  %% BLINDED
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Definitions, invariances, and the coordinate algorithm}
+\label{s:defs}
+
+\paragraph{L-profile.}
+For $n = \prod_{i=1}^r p_i^{a_i}$ with distinct primes $p_i$, the log-shares
+are $\ell_j = a_{(j)} \ln p_{(j)} / \ln n$, sorted so
+$\ell_1 \ge \cdots \ge \ell_r$, $\sum_j \ell_j = 1$. We read
+$L_1 = \ell_1$, $L_2 = \ell_2$, $L_3 = \ell_3$,
+$\mathrm{Tail} = \sum_{j \ge 3} \ell_j = 1 - \ell_1 - \ell_2$, and
+$H_2 = \sum_j \ell_j^2$ (Simpson concentration of multiplicative energy).
+Per-record quantities are averaged over a channel's records. The channel's effective
+factor count is the ratio of averages
+$\keff = \big(\sum_d w_d\, \mathbb{E}[H_2 \mid d]\big) / \overline{H_2}$,
+with $w_d$ the channel's digit histogram,
+$d(n) = \lfloor \log_{10} n \rfloor + 1$, and $\overline{H_2}$ the mean
+record-level concentration---this (not an average of per-record ratios) is
+what the analysis code computes, matching main-text Eq.~(2).
+Records with fewer than three prime-power parts have $L_3 = 0$ structurally
+(see \S\ref{s:geo15}).
+
+\paragraph{What the profile retains of the primes.}
+Every statistic of the sorted vector $(\ell_j)$ depends on $n$ only through
+the multiset $\{a_i \ln p_i\}$: the profile discards prime \emph{names}
+but retains prime \emph{magnitudes} through the $\ln p_i$. It is therefore
+\emph{not} invariant under prime relabeling---replacing a prime by one of a
+different size changes the profile ($6 = 2\cdot3$ has
+$L_1 = \ln 3/\ln 6 \approx 0.613$; relabeling $3 \to 101$ gives
+$202 = 2\cdot101$ with $L_1 \approx 0.870$). This is precisely why
+small-prime composition can act as driver 3 of the main-text reduction: the
+smallness of the grid primes is visible to the profile. The accurate
+statement used throughout is that shape statistics are functionals of the
+log-share multiset $\{a_i \ln p_i\}$---blind to prime names given their
+sizes.
+
+\paragraph{Scale invariance of the residual coordinates.}
+Multiplying a field by $10^c$ (a units change) adds $c$ to both $v_2$ and
+$v_5$ of every record, where $v_p$ is the $p$-adic valuation. The de-rounded
+coordinates are computed on the $2\cdot5$-free core $n / (2^{v_2} 5^{v_5})$,
+which is unchanged by the $10^c$ factor:
+$2^{v_2(10^c n)} 5^{v_5(10^c n)} = 10^c \cdot 2^{v_2(n)} 5^{v_5(n)}$. All
+scale-clean statistics are therefore exactly invariant under decimal unit
+scaling. This invariance is what exposes the ``domain signal'' of the main
+text \S4 as a units artifact: it reverses sign on monetary channels once the
+coordinates are made scale-clean (the de-rounded second log-share residual: raw $dL_2$ $+0.042$ $\to$
+scale-clean $dL_2'$ $-0.045$). The grid mass and grid depth are by design \emph{not}
+scale-invariant---they are the units/grid readout---and are corrected against
+the magnitude-matched null.
+
+\paragraph{Recording-grid coordinates (main text \S3), full set.}
+Grid mass $\rmass(n) = (v_2(n)\ln 2 + v_5(n)\ln 5)/\ln n$ with its
+$c_2$/$c_5$ additive split; grid conformance
+$\gamma = \frac1N \sum_k \mathbf{1}[g_0 \mid n_k]$ for the channel's modal
+grid $g_0$; grid depth
+$\gdepth(n) = \min(v_2(n), v_5(n)) = \max\{t : 10^t \mid n\}$; residue
+quantization $Q_m = \frac12 \sum_{r=0}^{m-1}
+|\widehat{\Pr}(n \equiv r \bmod m) - \frac1m|$ at
+$m \in \{100, 25, 49, 47, 43\}$, each reported against a magnitude-matched
+uniform-null expectation; and the digit-conditioned grid-mass split
+$|\rmass_{\mathrm{lo}} - \rmass_{\mathrm{hi}}|$ across the channel's
+median-digit split (a mixed-era flag). Algorithm~\ref{alg:enc} computes all
+eleven channel-level coordinates in $O(N \log n_{\max})$ from stored integers
+alone.
+
+\begin{algorithm}[t]
+\caption{Recording-grid coordinates of a channel (eleven values)}
+\label{alg:enc}
+\begin{algorithmic}[1]
+\Require integers $n_1,\dots,n_N$; modal grid $g_0$; moduli $\mathcal{M}=\{100,25,49,47,43\}$
+\State $\rmass,\gdepth,\gamma,c_2,c_5 \gets 0$; counts $C_m[\cdot]\gets 0$ for $m\in\mathcal{M}$
+\For{$k=1$ to $N$}
+  \State $a_2\gets v_2(n_k)$; $a_5\gets v_5(n_k)$; $L\gets\ln n_k$
+  \State $c_2 \mathrel{+}= a_2\ln2/L$; $c_5 \mathrel{+}= a_5\ln5/L$; $\gdepth \mathrel{+}= \min(a_2,a_5)$
+  \State \textbf{if} $g_0\mid n_k$ \textbf{then} $\gamma\mathrel{+}=1$
+  \For{$m\in\mathcal{M}$} $C_m[n_k \bmod m]\mathrel{+}=1$ \EndFor
+\EndFor
+\State $\rmass\gets(c_2+c_5)/N$; normalize $\gdepth,\gamma,c_2,c_5$ by $N$
+\For{$m\in\mathcal{M}$} $Q_m\gets \tfrac12\sum_{r}|C_m[r]/N - 1/m|$ \EndFor
+\State $\bar d\gets\mathrm{median}_k\, d(n_k)$
+\State $\rmass_{\mathrm{lo}},\rmass_{\mathrm{hi}}\gets$ mean $\rmass(n_k)$ over $d(n_k)\le\bar d$ and $>\bar d$
+\State \Return $\big(\rmass,\gdepth,\gamma,c_2,c_5,\{Q_m\},|\rmass_{\mathrm{lo}}-\rmass_{\mathrm{hi}}|\big)$
+\end{algorithmic}
+\end{algorithm}
+
+\section{Null construction and the core-magnitude baseline}
+\label{s:nulls}
+
+\paragraph{Magnitude-conditioned baseline.}
+The reference tables $\mathbb{E}[\cdot \mid d]$ are built from $2\times10^5$
+seeded uniform draws per digit stratum $d = 1..18$ (frozen seed 20260702),
+factorized exactly. $\mathbb{E}[L_1 \mid d]$ falls from $0.952$ ($d{=}1$) to
+$0.633$ ($d{=}18$); the Poisson--Dirichlet limit value is
+$0.6243$~\citep{dickman1930,billingsley1972,kingman1975,arratia2000}.
+Derived baselines exist for the de-rounded core (seed 20260703) and the
+deep-stripped core (seed 20260706). Channel residuals weight the stratum
+expectations by the channel's own digit histogram.
+
+\paragraph{Core-magnitude re-indexing (the reference correction).}
+Stripping primes $\le c$ from $n$ yields the deep core
+$\kappa_c(n) = \prod_{p_i > c} p_i^{a_i}$. The naive reference compares the
+core's profile to $\mathbb{E}[\cdot \mid d(n)]$, indexed by the
+\emph{original} digit length. But rounded values carry more small-prime mass,
+lose more magnitude when stripped, and have smaller cores---and smaller
+integers are intrinsically more concentrated. The correct reference indexes by
+the core's own magnitude: draw uniform integers over the original strata,
+strip identically, tabulate $\mathbb{E}[\mathrm{Tail} \mid d_\kappa]$ against
+the core digit length $d_\kappa$, and weight by the channel's normalized core
+digit histogram (Algorithm~\ref{alg:reindex}). Under this reference the
+surviving arm-domain concentration excess collapses from $-0.0184$ to
+$-0.0001$ ($90\%$ family-bootstrap CI $[-0.0004, +0.0004]$); the
+exponent-stacking mechanism check ($1.9\%$ of observational records versus
+$100\%$ of genuine smooth products) confirms no real concentration mechanism
+was present.
+
+\begin{algorithm}[t]
+\caption{Core-magnitude re-indexing}
+\label{alg:reindex}
+\begin{algorithmic}[1]
+\Require channel values $\{n_k\}$; strip cut $c$ (here $7$); core-magnitude table $\mathbb{E}[\cdot\mid d_\kappa]$
+\State build the table once: uniform draws over strata $1..18$, strip by $\kappa_c$, tabulate vs $d_\kappa$
+\For{each $n_k$}: $\kappa\gets\kappa_c(n_k)$; \textbf{if} $\kappa=1$ \textbf{skip}; accumulate $\mathrm{Tail}_c \equiv \mathrm{Tail}(\kappa)$, $H_2(\kappa)$; bump $w[d_\kappa]$
+\EndFor
+\State \Return $d\mathrm{Tail}^{\mathrm{core}} = \overline{\mathrm{Tail}_c} - \sum_{d_\kappa} \tfrac{w[d_\kappa]}{\sum w}\,\mathbb{E}[\mathrm{Tail}\mid d_\kappa]$ and $\keff^{\mathrm{core}}$
+\end{algorithmic}
+\end{algorithm}
+
+\paragraph{Local-flatness stress (v10.3, exploratory; seed 20260718).}
+A simulation maps where the model's local-flatness assumption fails
+(\path{stage25_flatness.py}, plan frozen in \path{run_config_flat25.json};
+output \path{flat25_results.csv}).
+Latent draws $x \sim \mathrm{Exp}(\mathrm{scale} = r\,g)$ recorded on grids
+$g \in \{10, 100\}$: at curvature-to-grid ratio $r = 0.5$ the recorded
+quotient is far from generic ($dL_1$ of the quotient $-0.18$, quotient
+$\keff$ $1.34$, decimal-prime log-share $0.64$ against a $0.36$ generic
+reference); deviations shrink monotonically to $|dL_1| \le 0.013$ and
+$\keff$ within $0.02$ of $1$ for $r \ge 5$. A zero-inflated count case
+(Poisson $\lambda = 30$, $60\%$ zeros, $g = 10$) shows the same
+small-support bias ($dL_1$ $+0.048$, $\keff$ $0.94$). Under the frozen
+$2\,\mathrm{SE}$ adequacy rule (severe at $N = 4\times10^4$: $2\,\mathrm{SE}
+\approx 0.002$) only the $r = 5$, $g = 100$ cell passes exactly; the
+practical reading is the magnitude ordering above. Direction of the induced
+bias: a \emph{false} composite/grid signature (inflated $\keff$ and
+decimal-prime mass), never a masked process signal. Named failure regimes:
+narrow-support latents ($r \lesssim 2$), sparse zero-inflated counts on
+coarse grids, and benchmarked estimates (the W12-1 mechanism of \S S6).
+
+\section{Corpus construction and quarantine}
+\label{s:corpus}
+
+A \emph{channel} is one integer-valued column of one dataset: $\ge 99\%$ of
+non-null entries integers, $\ge 100$ records, maximum $\ge 2$, deduplicated by
+content fingerprint. Integerization is canonical: absolute values; missing and
+non-integer entries dropped; $|n| \le 1$ excluded (no factorization); monetary
+fields scaled to integer cents (round-half-to-even); values above $10^{18}$
+logged and skipped. Channels group into dataset-families (one source lineage)
+and domains (named process areas). A prospectively specified quarantine reduced a
+provisional map of $462$ candidate families in $15$ domains to the frozen
+corpus of $18{,}951$ channels, $367$ families, $18$ domains (the
+quarantine's relabeling re-partitioned the $15$ provisional domain labels
+into the $18$ frozen ones)
+(${\sim}9.6\times10^8$ exact factorizations), reassigning mislabeled
+generator families; the frozen manifest records the patch and hashes. Two
+properties are load-bearing for scope: a few high-volume administrative
+sources dominate channel counts (network telemetry, procurement, and census
+are $>90\%$ of channels), and domain labels are heterogeneous ($18$) though
+uneven. The deviation log (16 entries) records data losses and access changes
+(e.g., deletion of unpacked archive snapshots; API key requirements).
+
+\paragraph{Raw-map teardown numbers (main text \S4).}
+Three-cluster structure in the family-level $(L_1, \mathrm{Tail})$ plane:
+silhouette $0.719$; cluster survival after dividing out $2\cdot5$: Jaccard
+$0.39$--$0.43$; scale-clean sign reversal of the monetary domain signal
+($+0.042 \to -0.045$); intrinsic dimension of the cleaned space $1.16$
+(TwoNN); residue-quantization negative controls: planted resonant families
+score $0.051$--$0.167$ against planted generic $\approx 0.0056$
+(${\sim}9$--$30\times$), observed channels median $0.020$, 95th percentile $0.439$.
+
+\paragraph{Leave-one-source-out robustness (v10.3, exploratory; seed
+20260716).} The four-driver arm sequence and the core-magnitude collapse
+were rerun excluding network telemetry, procurement, or census wholesale,
+and with equal-family weighting (\path{stage23_loso.py}, holds-rule frozen in
+\path{run_config_loso23.json}; outputs \path{loso23_results.csv},
+\path{loso23_family_counts.csv}).
+Telemetry and census contribute no families to the frozen arm-domain set
+(equity markets, seismology, real estate, procurement, food\_nutrition), so
+their exclusion leaves the arm untouched by construction---the residual
+claim never rested on them; procurement's exclusion removes $8$ of $166$ arm
+families. Every variant satisfies the frozen rule: raw arm Tail excess
+$+0.091$ to $+0.092$; de-rounded $-0.021$; deep-strip $-0.018$ to $-0.019$;
+core-indexed $-0.0001$ to $-0.0002$ with all $90\%$ family-bootstrap CIs
+containing $0$ (telemetry-excluded: $-0.0001$ $[-0.0004, +0.0004]$;
+procurement-excluded: $-0.0002$ $[-0.0005, +0.0003]$). Per-variant
+per-domain family counts accompany the output table.
+
+\section{The L1/L3 geography disposition (Build geo15)}
+\label{s:geo15}
+
+This exploratory build (seed 20260715) resolves the previously unresolved question of what the L1/L3 Cartesian
+geography means. Its analysis plan and disposition rule were frozen in
+\texttt{run\_config\_geo15.json} before results were computed. No frozen
+confirmatory rule covers it; the $\Delta\mathrm{AUC} \approx 0.05$ retention
+threshold is a project-management rule. Full narrative:
+\texttt{L1\_L3\_DISPOSITION.md}.
+
+\paragraph{Observational level.}
+Per-record L-profiles were never persisted by the frozen pipeline; the finest
+stored grain is the channel. Analyses run at three levels: per-record
+(stratified recompute: $153$ channels, $17$ domains, $9{,}199$ per-record
+profiles), channel ($18{,}992$ stored channel profiles), and family ($462$; the blocking
+unit).\footnote{Three related counts appear in this paper and are defined
+here once. The frozen post-quarantine corpus has $18{,}951$ channels in $367$
+families (the main-text headline). The stored channel-profile table was
+computed on the pre-quarantine observational set of $18{,}992$ channels in
+$408$ families: the frozen $18{,}951$/$367$ plus the $41$ quarantined
+generator channels (one family each, all carrying the \texttt{unresolved}
+domain label; these are distinct from the $159$ in-corpus
+\texttt{unresolved} channels of main-text Table~1), which every geo15 model
+excludes via the \texttt{unresolved}/synthetic-control filters. The $462$ figure is the
+cardinality of the full frozen family label map (observational plus
+synthetic-control families); grouped holdout blocks on the
+\texttt{dataset\_family} column of that map, so no two channels of one
+family ever cross a fold boundary, and after the exclusions the models see
+the frozen observational families only. Main-text Figure~6 summarizes
+family-level $\keff$ over the $367$ frozen-corpus families.}
+$37.5\%$ of sampled records have fewer than three prime-power parts, so
+per-record $L_3$ is a structural zero for over a third of records
+(conditional mean when defined: $0.158$); channels dominated by such records
+(mean parts $< 2.5$) are faceted separately in every display.
+
+\paragraph{Block A: raw geography.}
+Recomputed uniform-integer pseudo-channels match the frozen baseline within
+$0.02$ at every stratum (machinery validation). Exact products of $2/3/4$
+primes sit at $(L_1, L_3) = (0.51, 0.00) / (0.35, 0.32) / (0.28, 0.25)$;
+additive controls at the baseline ($0.67, 0.08$); the same exact products
+after one decimal rounding (grid $10/100/1000$) land at
+$L_1$ $0.47$--$0.60$, $L_3$ $0.10$--$0.15$---inside the recorded band.
+
+\paragraph{Block B: controlled geography.}
+Control sequence at channel level (domains with $\ge 5$ families; synthetic
+and unresolved channels excluded): raw $(L_1, L_3)$ $\to$ digit-length
+residuals $\to$ de-rounded ($2\cdot5$-stripped) residuals $\to$
+residue-conditioned residuals. Out-of-family domain separability of the 2-D
+coordinates (GroupKFold by family, macro OVR AUC, family-bootstrap $90\%$
+CI): $0.526\,[0.508, 0.543]$ raw; $0.422\,[0.298, 0.527]$;
+$0.513\,[0.495, 0.526]$; $0.522\,[0.509, 0.531]$. Family-level silhouettes by
+domain are negative at every stage (no domain islands). The recomputed
+digit-length residual $dL_1$ matches the frozen stored value to $10^{-5}$.
+
+\paragraph{Block C: held-out incremental information.}
+Grouped holdout (GroupKFold, 5 folds, groups = dataset-family; never
+record-level CV), gradient-boosting classifier, family-grouped bootstrap
+(500) CIs. Table~\ref{tab:heldout}. $L_3$ beyond recording variables $+ L_1$: a small positive increment of
+$+0.013$, below the pre-declared $0.05$ retention threshold (a project rule);
+the binary count-vs-amount task is at $0.9999$ from recording variables
+alone. Two calibration caveats are stated plainly. First, paired
+family-bootstrap $90\%$ CIs (stage29, seed 20260722; one family resample
+shared by both ladders per draw) quantify the deltas at the family grain:
+$L_1$ beyond R $+0.009$ $[-0.006, +0.026]$; $L_3$ beyond R$+L_1$ $+0.013$
+$[-0.011, +0.038]$---the interval includes $0$; full profile beyond R
+$+0.035$ $[+0.004, +0.073]$, positive but below the threshold. Second, the incremental-$\Delta$AUC ladder
+is \emph{uncalibrated for hidden-process signal}: the task-sensitivity
+control of this section calibrates the design against \emph{recording}
+differences only, so a small $\Delta$AUC bounds what these coordinates add
+to this task, not what any conceivable process signal could produce.
+Consequence (disposition rule 4): the manuscript makes no claim that L1/L3
+topology is independently informative.
+
+\begin{table}[t]
+\centering
+\caption{Held-out ladders (exploratory; domain task over the 12 domains with
+$\ge5$ families; macro OVR AUC, family-grouped bootstrap $90\%$ CI). Source:
+\texttt{geo15\_heldout\_auc.csv}.}
+\label{tab:heldout}
+\small
+\begin{tabular}{lcccc}
+\toprule
+feature set & domain AUC & $90\%$ CI & $\Delta$ vs R & $\Delta$ vs R+$L_1$ \\
+\midrule
+R (recording variables) & 0.512 & [0.497, 0.528] & --- & --- \\
+R $+ L_1$ & 0.522 & [0.512, 0.531] & $+0.009$ & --- \\
+R $+ L_1 + L_3$ & 0.535 & [0.514, 0.554] & $+0.022$ & $+0.013$ \\
+R $+$ full profile & 0.547 & [0.525, 0.566] & $+0.035$ & $+0.025$ \\
+\midrule
+count vs amount (binary) & \multicolumn{4}{l}{R alone $0.9999$; adding $L_1, L_3$ changes nothing} \\
+\midrule
+\multicolumn{5}{p{0.9\linewidth}}{\footnotesize Deltas before rounding:
+$+0.0091$, $+0.0222$, $+0.0131$, $+0.0349$, $+0.0258$. Paired family-bootstrap
+$90\%$ CIs for the deltas are given in the text below.} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Task-sensitivity positive control (v10.3, exploratory; seed
+20260717).} The transfer design itself is calibrated by a positive control
+(\path{stage24_taskpos.py}, plan frozen in
+\path{run_config_taskpos24.json}; outputs \path{taskpos24_calibration.csv},
+\path{taskpos24_permutation.csv}, \path{taskpos24_s1_diagnostics.csv}). Synthetic pseudo-channels ($150$
+families $\times 3$ channels $\times 600$ records) with class labels defined
+by injected recording differences run through the \emph{identical}
+family-grouped pipeline: AUC rises from $0.47$--$0.49$ at zero effect to
+$0.67$/$0.81$ (raw/digit-residual coordinates) at a grid-mass shift of
+$+0.020$, $0.99$ at $+0.066$, and $1.00$ at full-coverage grids; a
+tick-$7$ treatment with near-zero grid-mass shift is read at $1.00$ through
+the shape coordinates. A family-level label-permutation null centers on
+$0.485$ (range $[0.39, 0.61]$ over $20$ draws; one draw marginally exceeded
+the frozen $0.6$ bound and is reported as such). The design is therefore
+sensitive to recording differences an order of magnitude smaller than what
+would be needed to explain the real corpus's transfer AUC of $0.526$ as a
+design failure. Diagnostics of the digit-residual stage's below-chance point
+($0.422$, wide CI): GroupKFold with the corpus's extreme family-size skew
+yields one fold with a single test family and class (macro-AUC undefined),
+one fold $98\%$ dominated by a single class ($0.864$), and three balanced
+folds at $0.497$--$0.509$---fold instability at near-zero signal, not
+negative information.
+
+\paragraph{Block D: mechanism stress.}
+Per-record recompute under transforms on the same subsample. A three-factor
+exact product moves from $(0.35, 0.32)$ to $(0.62, 0.10)$ under $n \to n{+}1$
+(the 12-digit baseline point is $(0.64, 0.09)$); one grid rounding does the
+same. Recorded channels move most when the grid itself is removed (mean
+$|\Delta L_1|$: $+1$ shift $0.078$; de-round $0.159$; strip$\le7$
+$0.238$)---the grid is where the shape mass lives. Subsample domain
+separability from $(L_1, L_3)$: identity $0.624$, after $n{+}1$ $0.521$.
+
+\section{Spike-in machinery, tiers, and full results}
+\label{s:spikein}
+
+Hosts: the six amount-kind channels (capped at $15{,}000$ records); eligible
+records have $2\cdot5$-free core $\kappa \ge 300$. With $t_i = \log_{10}
+\kappa_i$ the host record's core magnitude, the injected product $Q_i$ comes
+from three tiers: \emph{(a) naive}---balanced two-factor products at the
+host's marginal core-magnitude distribution, placed on the modal grid at
+random positions; \emph{(b) magnitude-matched}---in place: $t = t_i$ and the
+record's exact grid part is reused, so the mixture's (grid, magnitude) joint
+is host-exact; \emph{(c) base-matched adversarial}---$Q_i = 3^{b_3} 7^{b_7}
+R$ with $(b_3, b_7)$ drawn from the host's empirical deep-core joint and $R$ a
+balanced two-factor product coprime to $210 = 2\cdot3\cdot5\cdot7$,
+matching grid, magnitude,
+\emph{and} the small-prime joint, leaving composite structure of the $>7$ core
+as the only difference from a generic quotient.
+
+Detection: a channel is recovered at mixture $f$ iff the replicate-median
+$\keff^{\mathrm{core}}$ (15 replicates) exceeds the channel's own $f{=}0$
+record-bootstrap 95th percentile ($R = 400$, $n$-matched). Confound check: the
+eleven grid coordinates of the $f = 0.10$ mixture are $z$-scored against 200
+host bootstraps; a tier passes iff $\max|z| < 3$.
+
+\begin{table}[t]
+\centering
+\caption{Quotient-level spike-in recovery (fraction of six host channels) by
+tier and mixture fraction, with the mixture-level confound check. Source:
+\texttt{power13\_quotient\_spikein.csv}, \texttt{power13\_confound\_check.csv}.}
+\label{tab:spikein}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccccc}
+\toprule
+injection tier & $f{=}0.01$ & $f{=}0.05$ & $f{=}0.10$ & $f{=}0.25$ & $\max|z|$ (med/max) & clean hosts \\
+\midrule
+(a) naive & 0.50 & 1.00 & 1.00 & 1.00 & 15.8 / 21.5 & 0/6 \\
+(b) magnitude-matched & 0.50 & \textbf{1.00} & \textbf{1.00} & 1.00 & \textbf{1.8 / 6.5} & 5/6 \\
+(c) base-matched adversarial & 0.00 & \textbf{1.00} & \textbf{1.00} & 1.00 & \textbf{2.0 / 2.9} & \textbf{6/6} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The earlier off-grid design (exact products into rounded hosts) drifts the
+mixture's grid coordinates at $|z|$ up to $10^7$ and is retained only as an
+illustration of why the confound check is mandatory.
+
+\paragraph{Count-kind hosts (v10.3, exploratory; seed 20260719).}
+The tier-(b) in-place design was extended to count-kind hosts
+(\path{stage26_counthosts.py}, host recipe and holds-rule frozen in
+\path{run_config_count26.json}; outputs \path{count26_*.csv}). The
+frozen magnitude screen (median $\ge 10^5$, $\ge 500$ eligible cores)
+selects three telemetry byte-count channels from distinct families---the
+only count-kind channels at the required magnitude, which itself scopes the
+claim. Recovery: $0/3$ at $f = 0.01$, $3/3$ at $f = 0.05$ and above
+(replicate-median $\keff^{\mathrm{core}}$ against each channel's own
+$f{=}0$ bootstrap 95th percentile, $R = 200$). The mixture-level confound
+check exceeds the $|z| < 3$ bar in all three hosts (max $|z|$ $3.3$--$5.2$),
+so per the frozen rule the extension does \emph{not} qualify as clean
+recovery; the per-coordinate decomposition, however, shows every flagged
+coordinate is a \emph{residue} score drifting \emph{negative}
+(tv$_{100}$, tv$_{25}$, tv$_{47}$, tv$_{43}$) with the decimal-grid
+coordinates (grid mass, depth, conformance, $c_2$, $c_5$) within noise: the
+injections dilute the hosts' strong intrinsic resonance, the same mechanism
+as the one flagged amount-kind host, not grid leakage. Both the recovery and
+the flags are reported, and Section~7 of the main text is scoped
+accordingly.
+
+\paragraph{Power curves and false-positive calibration (v10.3; seed
+20260721).} Assembled from the frozen power13 outputs without recomputation
+(\path{stage28_powerfp.py}; outputs \path{powerfp28_curves.csv},
+\path{powerfp28_fpcal.csv}): per-tier recovery is $0.5$, $1.0$, $1.0$, $1.0$ (naive and
+magnitude-matched) and $0.0$, $1.0$, $1.0$, $1.0$ (adversarial) of six hosts
+at $f = 0.01$, $0.05$, $0.10$, $0.25$, with per-host effect sizes in units of
+each channel's own noise band. False-positive calibration is by construction
+of the record-bootstrap band (nominal $0.05$); the single frozen $f{=}0$
+observation per host sits below its threshold in $6/6$ hosts, and the
+count-host extension uses the same construction.
+
+\section{Pre-registration ledger and misfire postmortems}
+\label{s:prereg}
+
+\begin{table}[t]
+\centering
+\caption{All twenty frozen decision rules with outcomes. Source:
+\texttt{artifact/manifests/decision\_rules.csv}.}
+\label{tab:prereg}
+\scriptsize
+\begin{tabular}{llp{0.44\linewidth}c}
+\toprule
+run & id & rule (frozen) $\to$ outcome & verdict \\
+\midrule
+gate07  & G1 & product AUC $\ge0.85$ $\to$ $0.86$--$0.96$ & met \\
+gate07  & G2 & one digit of rounding destroys detection $\to$ chance at grid $100$ & met \\
+hunt08  & H8-1 & structured products AUC $\ge0.85$ $\to$ $0.889$--$0.998$ & met \\
+hunt08  & H8-2 & prime-pair $\keff\approx1.1$ $\to$ $1.035$ & met$^{\dagger}$ \\
+hunt09  & H9-1 & residual $\to0$ under core-magnitude null $\to$ $-0.0184{\to}{-}0.0001$ & met \\
+hunt09  & H9-2 & COD multiplicity $\keff<1$ $\to$ $0.534$ & met \\
+hunt09  & H9-3 & NIST $\keff\ne1$ (direction uncertain) $\to$ $1.707$ & met \\
+hard10  & H10-1 & semiprime: $\keff$ blind, full-profile sees $\to$ $0.44$/$0.93$ & met \\
+hard10  & H10-2 & off-grid spike-in recovered $\to$ $6/6$ & met \\
+hard10  & H10-3 & $n{\to}n{+}1$ collapses detection $\to$ AUC $0.44$ & met \\
+hard10  & H10-4 & grid coordinates beat Benford on grid mismatch $\to$ $1.00$ vs $0.46$ & met \\
+emp11   & E11-1 & employment multiplicative null $\to$ $\keff\,0.98$--$1.00$ & met \\
+emp11   & E11-2 & survey grid-marked vs census $\to$ $\rmass\,0.474$ vs $0.102$ & met \\
+\textbf{whisp12} & \textbf{W12-1} & replicate-or-retire whisper $\to$ no CI-clean replication & \textbf{missed} \\
+power13 & P13-1 & quotient spike-in powered $\to$ $6/6$ (adversarial clean) & met \\
+\textbf{power13} & \textbf{P13-2} & energy omnibus recovers pairs $\to$ underpowered ($0.17$) & \textbf{missed} \\
+\textbf{power13} & \textbf{P13-3} & atom count decreases $\to$ direction inverted & \textbf{missed} \\
+power13 & P13-4 & grid coordinates add value on subtle grid $\to$ $1.00$ vs $\le0.53$ & met \\
+vote14  & V14-1 & votes multiplicative null $\to$ $\keff\,0.98$--$1.03$ & met \\
+vote14  & V14-2 & votes vs modeled CVAP grid-marked $\to$ $\rmass\,0.275$ vs $0.12$ & met \\
+\bottomrule
+\end{tabular}
+
+{\footnotesize $^{\dagger}$The H8-2 expectation was stated qualitatively in
+the frozen text (``$\approx 1.1$''); the recorded verdict applied the run's
+own criterion (elevated above $1$ with detection AUC near chance), which
+$1.035$ met. No quantitative tolerance was frozen; we state this rather than
+imply one.}
+\end{table}
+
+\paragraph{Epistemic status of the registrations.} The decision rules were
+frozen in configuration files inside the analysis tree (hash-integrity via
+the artifact manifests), not lodged with an external registry, so they are
+\emph{internally frozen} rather than externally timestamped; readers should
+weight them accordingly. Two further distinctions matter. First, the
+acquisition-frozen runs (emp11, whisp12, vote14) wrote their rules before
+any network fetch, so those rules were evaluated on data the authors had
+never seen; the computation-frozen runs (gate07, hunt08, hunt09, hard10,
+power13) wrote their rules before the computation but over corpus data that
+existed locally during rule development. Second, seed values follow a
+date-like labeling convention ($20260702, 20260707, \dots$); they are
+labels, not timestamps, and carry no registration force of their own
+(\S S9). The v10.3 exploratory extensions follow the same
+internal-freeze protocol and are labeled exploratory throughout.
+
+\paragraph{P13-2, the underpowered omnibus.}
+Energy distance to a fixed generic reference cloud was pre-registered as the
+primary statistic for balanced-pair injections ($\ge 4/6$ channels at
+$f \le 0.10$); it recovered at most $0.17$. Cause: dilution---a real host
+already sits far from a generic cloud, so a small injected fraction barely
+moves the group statistic. The targeted stripped-core statistics recover
+$6/6$ at $f = 0.05$. Implication: power lives in targeted core statistics
+keyed to the specific alternative; a fixed reference cloud is the wrong null
+for an off-cloud channel.
+
+\paragraph{P13-3, the inverted direction.}
+The mean atom count of the stripped core was pre-registered to decrease under
+balanced-pair injection (intuition transferred from a synthetic null with
+many-part comparators). On real hosts the direction inverts: real cores
+average ${\approx}1.1$ atoms, so two-atom injections \emph{raise} the count.
+Correct arithmetic against the wrong baseline; the conclusion rests on
+$\keff^{\mathrm{core}}$ and tail statistics, whose directions held.
+Implication: coordinate directions must be calibrated on the real host
+baseline.
+
+\paragraph{W12-1, the vanishing whisper.}
+A candidate multiplicative residual in preliminary model-based survey
+estimates (scale-clean first log-share residual $dL_1' = +0.016$) was registered for promotion only if it
+replicated CI-clean, same sign, effect $\ge 0.01$, in an independent
+estimation system. Across four systems (CES real-time vintages, PEP, seasonal
+adjustment, ACS) the sign was unstable and no contrast was CI-clean; the
+signal existed only in the preliminary vintage and vanished after
+benchmarking---itself an instance of the recording heuristic: benchmarking is
+a later additive re-anchoring that severs multiplicative structure. The rule
+correctly retired the candidate; sub-$0.02$ multiplicative residuals in survey
+estimates are estimation-model transients outside the instrument's envelope.
+
+\section{Exact-integer catalogue and computation}
+\label{s:exact}
+
+\paragraph{Catalogue.}
+Synthetic ground truth (magnitude- and moment-matched): sums and Poisson
+tallies $\keff = 1.00$ exactly; products of $k$ factors AUC $0.86$--$0.96$;
+detection survives factor imbalance to a $90/10$ log-split and is destroyed by
+one digit of rounding. Structured products with closed-form factorizations
+(magnitudes to $10^{7263}$): factorials, binomials, multinomials, primorials,
+$B$-smooth numbers, and finite-group orders (e.g.\
+$|GL(k,q)| = q^{k(k-1)/2} \prod_{i=1}^k (q^i - 1)$) all clear the
+pre-registered AUC $\ge 0.85$ bar ($0.889$--$0.998$). Measured fields:
+crystallographic site multiplicities~\citep{coddb} $\keff = 0.534 \pm 0.091$
+($n = 11{,}240$), atomic degeneracy products~\citep{nistasd} $1.707 \pm 0.557$ ($n = 505$),
+graph automorphism orders~\citep{snap} exact to $10^{17{,}265}$ with
+$\keff$ up to $4.44$;
+real additive fields $0.996$. Balanced prime pairs are the edge case:
+$\keff$-blind asymptotically (for distinct primes $p, q$,
+$H_2 = \tfrac12 + 2(\ell_1 - \tfrac12)^2 > \tfrac12$ strictly, meeting the
+null only in the magnitude limit) yet recoverable from full-profile statistics
+at AUC $0.83$--$0.93$.
+
+\paragraph{Exact computation.}
+No value above the sieve range is factorized by trial division, and no profile
+is computed through floating point. Exponent maps come in closed form:
+Legendre's $v_p(n!) = \sum_{k\ge1} \lfloor n/p^k \rfloor$ for
+factorials~\citep{legendre1808}; Kummer's carry count for
+binomials/multinomials~\citep{kummer1852}; closed factorization of group
+orders; twin-class reduction plus Schreier--Sims for automorphism
+orders~\citep{seress2003}.
+Arbitrary-precision arithmetic certifies residual large factors; the only
+floating-point step is $\ln n = \sum_i a_i \ln p_i$ from the exact exponent
+map. There is no path by which float overflow could manufacture the reported
+$\keff$ values.
+
+\section{Benchmarks: digit battery versus grid coordinates}
+\label{s:bench}
+
+\begin{table}[t]
+\centering
+\caption{Attribution vs.\ detection: naive digit battery (incl.\ the
+Beber--Scacco vote-forensic test) vs.\ grid coordinates, by contrast (AUC;
+ties retained). Source: \texttt{power13\_naive\_benchmark.csv},
+\texttt{vote14\_benchmark.csv}.}
+\label{tab:naive}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{4.1cm}p{1.9cm}p{1.6cm}cp{1.6cm}}
+\toprule
+contrast & terminal-digit battery & Beber--Scacco & grid coords & role \\
+\midrule
+survey vs.\ census, employment (decimal grid) & 1.00 & --- & 1.00 (tie) & calibration \\
+ACS point estimates vs.\ census & 0.29--0.54 & --- & 0.77 & below bar \\
+ACS margin-of-error vs.\ census & 0.74--1.00 & --- & 1.00 (tie) & attribution \\
+enumerated votes vs.\ modeled CVAP (5-grid) & 1.00 & fires on CVAP & 1.00 (tie) & attribution \\
+real-return fabrication contrast (2-sided) & \textbf{1.00} & anti-detects & 0.68--0.83 & detection lost \\
+constructed 47-tick vs.\ 43-tick & $\le$0.53 & --- & \textbf{1.00} & detection \\
+era-mixture fabrication & 0.46--0.74 & --- & 0.49 (both fail) & neither \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+(Dashes in the Beber--Scacco column are N/A by design: the test is defined
+for election-return-style count series and was run only on the contrasts
+involving them.) Two readings of the fabrication row, both reported: under the frozen one-sided
+orientation the grid coordinates ``add value'' at $f = 0.25$ because the
+one-sided digit battery anti-detects; read two-sided, a last-two-digit drift
+test reaches AUC $1.00$ and dominates. On real returns the grid coordinates
+add detection value nowhere; their detection edge lives on non-decimal grids
+(constructed case), and their real-data role is attribution.
+
+\section{Artifact, manifests, and reproduction}
+\label{s:artifact}
+
+The deposit contains: the $21$ frozen v8-era configuration files
+(\texttt{run\_config\_*}) plus the exploratory geo15 and six v10.3 configs;
+the decision-rule manifest (20 rules); \texttt{claim\_manifest.csv} (36
+claims, each mapped to script, output table/figure, config, and SHA-256);
+the deviation log (16 entries); all analysis scripts (stages 1--21, plus the
+exploratory \texttt{stage22\_geo15.py} with unit tests) and figure scripts
+(\texttt{scripts\_v10/}); hash manifests for tables and figures; and a worked
+end-to-end verification of the CVAP $\chi^2$ claim in the README. Seeds
+follow the per-build convention \texttt{2026070X}--\texttt{202607XX}
+recorded in each config; the geo15 build uses 20260715 and the v10.3
+exploratory stages use 20260716--20260721. Seed values are date-like
+\emph{labels} chosen for readability, not timestamps, and carry no
+registration force. The v10.3 additions comprise
+\path{stage23_loso.py} through \path{stage28_powerfp.py}, one frozen
+config per stage (\path{run_config_loso23.json} \ldots{}
+\path{run_config_powerfp28.json}), and outputs prefixed
+\path{loso23_}, \path{taskpos24_}, \path{flat25_}, \path{count26_},
+\path{gate27_}, \path{powerfp28_} in \path{tables/}; each plan was frozen
+before its computation. \texttt{RESULT\_PROVENANCE.md} maps every
+number retained in the main text to its output file and verification status.
+Table~\ref{tab:displayprov} maps every main-text display to its generating
+script and source tables.
+
+\begin{table}[t]
+\centering
+\caption{Display provenance: every main-text figure and table, its
+generating script (\texttt{scripts\_v10/}), and its source tables. ``artifact
+hash'' means the table is covered by the frozen
+\texttt{artifact/hashes/SHA256SUMS} or \texttt{claim\_manifest.csv};
+``ledger hash'' means its SHA-256 is recorded in
+\texttt{RESULT\_PROVENANCE.md}; geo15 tables are exploratory outputs of
+\texttt{stage22\_geo15.py} (seed 20260715).}
+\label{tab:displayprov}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llp{0.45\linewidth}l}
+\toprule
+display & script & source tables & hash coverage \\
+\midrule
+Fig.~1 & \texttt{fig1\_cvap.py} & \texttt{vote14\_panel.csv}, \texttt{vote14\_beber\_scacco.csv}, \texttt{vote14\_grid\_probe.csv} & artifact \\
+Fig.~2 & \texttt{fig2\_geography.py} & \texttt{geo15\_geography\_channel.csv}, \texttt{geo15\_controlled.csv} & geo15 (exploratory) \\
+Fig.~3 & \texttt{fig3\_waterfall.py} & \texttt{derounding\_effect.csv}, \texttt{deepstrip\_effect.csv}, \texttt{hunt09\_residual\_rebaseline.csv}, \texttt{resonance\_controls.csv}, \texttt{residue\_structure.csv} & artifact + ledger \\
+Fig.~4 & \texttt{fig4\_mechanism\_power.py} & \texttt{hard10\_degradation.csv}, \texttt{power13\_quotient\_spikein.csv} & artifact \\
+Fig.~5 & \texttt{fig5\_acs.py} & \texttt{whisp12\_acs.csv} & artifact \\
+Fig.~6 & \texttt{fig6\_exact.py} & \texttt{gate\_rungs.csv}, \texttt{hunt09\_lowkeff.csv}, \texttt{hunt09\_highkeff.csv}, \texttt{family\_profiles\_v3.csv} (restricted to the $367$ frozen families), \texttt{observational\_corpus\_v2.csv} & artifact \\
+Table~1 & --- & \texttt{family\_inventory.csv} (frozen corpus composition) & artifact \\
+Table~2 & --- & \texttt{hunt09\_residual\_rebaseline.csv} and the frozen driver tables (\texttt{derounding\_effect.csv}, \texttt{deepstrip\_effect.csv}, \texttt{residue\_structure.csv}) & artifact + ledger \\
+Table~3 & --- & none (interpretive summary; no numeric claims) & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Operational protocol and gate validation}
+\label{s:protocol}
+
+\paragraph{The two-step gate, operationally.}
+\emph{Inputs:} the flagged integer partition and a clean reference partition
+(or the magnitude-matched uniform null below). \emph{Step 1:} run the digit
+test that raised the concern; record its statistic and screen (e.g.\
+Beber--Scacco $\chi^2_9$ on records $\ge 1000$). \emph{Step 2:} compute the
+recording-grid coordinates. Defaults, as validated here: the modulus set $\{4$, $8$, $25$, $49$,
+$100$, $47$, $43\}$; modal grid $g_0$, the
+largest $g$ among $2$, $4$, $5$, $10$, $20$, $25$, $50$, $100$, $200$,
+$250$, $500$, $1000$ with conformance $\ge 0.90$ (else $1$); magnitude-matched reference = uniform integers drawn
+to the series' digit-length histogram ($20$ seeded draws; report excess =
+observed minus null-mean TV); $z$-scores against the reference draws'
+spread when a formal scale is needed. \emph{Multiplicity:} with $7$ moduli
+and several partitions, treat single marginal excesses as screening only;
+the validated flag is TV excess $\ge 0.05$ (an order of magnitude above the
+generic level $\approx 0.006$) at any modulus, or $g_0 > 1$.
+\emph{Stop/go:} flag present $\to$ report ``the alarm is grid-compatible''
+and seek the documented recording rule (attribution requires the
+documentation); flag absent $\to$ ``not attributable to a grid this
+instrument can see''---substantive investigation proceeds. The output is
+never a verdict on the data. A worked verification script for the CVAP row
+ships in the deposit README.
+
+\paragraph{Worked CVAP report (every field of the main-text protocol).}
+Unit of analysis: county tabulation ($3{,}222$ county-level rows in the
+special tabulation; the ACS/decennial county frame of main-text Figure~5 has
+$3{,}144$; $3{,}171$ rows pass the $\ge 1000$ screen). Scored population: published \texttt{CVAP\_EST},
+2018--2022 special tabulation. Representation: last digits (step 1);
+recording-grid coordinates (step 2). Baseline: last-digit uniformity;
+magnitude-matched uniform null. Known recording rule: the documented rounding maps estimates of $1$--$7$
+to $4$ and rounds estimates $\ge 8$ to the nearest five, so every analyzed
+value (all $\ge 1000$) lies in the nearest-five regime and the five-grid
+statement is exact for the analyzed data \citep{cvaptechdoc}. Result class: construction-attributed (signature
+$+$ documentation). Detector outcome: $\chi^2_9 = 12{,}684$, $p$ below
+reporting precision. Gate outcome: $g_0 = 5$; TV excess $+0.765$ at modulus
+$25$, $+0.729$ at $100$. Compatible alternative mechanisms: none required
+beyond the documented rule. Licensed conclusion: the alarm is attributable
+to the documented five-grid. Not licensed: any statement about the accuracy
+or integrity of the underlying tabulation.
+
+\paragraph{Adversarial co-occurrence example (v10.3, seed 20260720).}
+Fabricated \emph{and} gridded: values drawn from a smooth lognormal
+generator (``fabricated'': no real process behind them), then published on a
+five-grid, fire the last-digit test at $\chi^2_9 \approx 11{,}800$ and show
+$g_0 = 5$ with TV excess $+0.76$ at modulus $25$---the gate correctly
+reports grid-compatible, because the \emph{alarm} is caused by the grid.
+The example operationalizes the warning: the gate attributes the alarm, not
+the data; a fabricated series published on a grid passes the gate exactly
+like an authentic one.
+
+\paragraph{Ground-truth validation library (v10.3, seed 20260720).}
+Recipe frozen in \path{run_config_gate27.json}; output
+\path{gate27_library.csv}. Sensitivity is computed over \emph{seven}
+grid-truth series: the three documented real-data series (CVAP, CES, ACS
+margin-of-error) plus four constructed ones (the fabricated-and-gridded
+synthetic of the preceding paragraph, the binary-aligned allocation demo,
+and the $47$- and $43$-tick re-quantizations). Coordinate sets: the corpus
+instrument's eleven coordinates use five residue moduli
+($100, 25, 49, 47, 43$); the operational default here extends the set to
+seven (adding $4$ and $8$ for binary grids).
+Documented-grid series: CVAP county (flagged, $g_0{=}5$); CES survey
+employment, hundreds-grid (flagged, $g_0{=}100$, TV excess $+0.92$); ACS
+margin-of-error (\textbf{missed}: its partial rounding sits below the
+$0.05$ coarse threshold and $0.90$ conformance bar---this is the case that
+requires the CI-based grid-mass comparison of the main text); binary-aligned
+allocations (flagged, $g_0{=}4$); constructed $47$- and $43$-ticks (flagged
+at their own moduli with $g_0{=}1$---the non-decimal capability). Non-grid
+series: county returns 2020/2024, decennial-style county population counts,
+additive synthetic sums, uniform null (all clean); NC precinct returns
+(\textbf{false-flagged} at modulus $8$, excess $+0.116$)---a small-magnitude
+series in exactly the failure regime named by the flatness stress of
+\S S2. Sensitivity $6/7$ (the one miss is a documented real series);
+specificity $5/6$; both misses mechanistically explained. The library doubles as the validation table for the main-text
+protocol; its scope is series already cached by the project---no new
+acquisition.
+
+\bibliographystyle{plainnat}
+\bibliography{references_v10}
+
+\end{document}

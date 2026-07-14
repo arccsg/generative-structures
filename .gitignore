@@ -22,11 +22,12 @@ tmp/
 *secret*
 .netrc
 
-# The identified (non-anonymized) manuscript must NOT enter this repo
-# (it lives in the paper folder, not here). Belt-and-suspenders:
-lprofile_paper_*.tex
-lprofile_paper_*.pdf
+# Identity-carrying submission files must NOT enter this repo. The BLINDED
+# v10 manuscript/supplement are anonymized (swept) and live in manuscript/.
+lprofile_titlepage*
+*cover_letter*
 *_identified*
+titlepage*
 
 # OS / editor junk
 .DS_Store

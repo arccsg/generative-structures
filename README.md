@@ -120,3 +120,12 @@ submission: anonymization has been applied deposit-wide (see
 `anonymization_log.txt`, including the v10.4 entry) and `hashes/SHA256SUMS`
 covers every file. `CITATION.cff` carries TODO placeholders that are filled
 only on de-anonymization at acceptance.
+
+## manuscript/ (v10.4 blinded submission documents)
+
+`manuscript/` holds the double-blind manuscript and supplement (LaTeX
+sources, compiled PDFs, `references_v10.bib`, and the compiled figures in
+`figures_v10/`; the generating scripts are in `scripts_v10/`). These are the
+anonymized submission documents; the separate identifying title page and the
+cover letter are deliberately NOT in this repository. Build:
+pdflatex -> bibtex -> pdflatex -> pdflatex on each `.tex`.
