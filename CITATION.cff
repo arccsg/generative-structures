@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this artifact, please cite it and the associated manuscript."
+title: "Artifact: When Numerical Structure Reads the Recording Pipeline — A Boundary for Factorization-Based Data Analysis"
+type: dataset
+abstract: >-
+  Reproducibility artifact for the JSSAM manuscript: frozen configuration
+  files, decision-rule and claim manifests, analysis scripts (builds 01-14,
+  geo15, and the v10.3/v10.4 exploratory stages), generated result tables,
+  figures and figure scripts, deviation log, and provenance ledger.
+  Anonymized for double-blind review; author metadata and the archival DOI
+  are supplied on acceptance.
+# TODO(author): fill on de-anonymization at acceptance. Do NOT complete before then.
+authors:
+  - given-names: "TODO-GIVEN"
+    family-names: "TODO-FAMILY"
+    affiliation: "TODO-AFFILIATION"
+doi: "TODO-RESERVED-DOI"
+version: "v10.4-artifact"
+date-released: "2026-07-14"
+license: CC-BY-4.0
+keywords:
+  - data provenance
+  - data quality
+  - digit analysis
+  - rounding
+  - heaping
+  - quantization
+  - prime factorization
+  - election forensics
+repository-artifact: "TODO-ZENODO-URL"

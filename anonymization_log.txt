@@ -15,3 +15,10 @@ v10 additions (2026-07):
   scripts_v10/figstyle.py: 1 username/path token(s) stripped (Rule 1).
   All other added scripts/configs/tables verified to contain no username,
   machine identifier, or author-identifying path.
+
+v10.4 deposit build (2026-07):
+  scripts/stage4_catalog.py: one local project-folder token that coincides
+  with the name of a public code repository was rewritten to
+  '<GEN-SIM-PROJECT>' (Rule 3 extended to project-folder tokens matching
+  public repository names). The token was a topic-classification dict key;
+  the rewrite changes no analysis semantics.

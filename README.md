@@ -107,3 +107,16 @@ count-kind spike-in hosts, the fabricated-and-gridded co-occurrence example,
 assembled power/false-positive curves, and the ground-truth gate validation
 library (`gate27_library.csv`; sensitivity 6/7, specificity 5/6, misses
 explained). Outputs under `tables/` with the matching prefixes.
+
+## v10.4 additions and deposit readiness (2026-07)
+
+Round-2 revision support: `scripts/stage29_pairedci.py` +
+`configs/run_config_pairedci29.json` (paired family-bootstrap CIs for the
+transfer-ladder deltas; output `tables/pairedci29_deltas.csv`), updated
+figure scripts (Figure 3 unified to the frozen-arm family-equal estimand),
+and `RESULT_PROVENANCE.md` (the number-to-output ledger the supplement
+references). This tree is the intended Zenodo snapshot for the JSSAM
+submission: anonymization has been applied deposit-wide (see
+`anonymization_log.txt`, including the v10.4 entry) and `hashes/SHA256SUMS`
+covers every file. `CITATION.cff` carries TODO placeholders that are filled
+only on de-anonymization at acceptance.

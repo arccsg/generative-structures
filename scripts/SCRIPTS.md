@@ -28,7 +28,7 @@ build14.md) and `../manifests/decision_rules.csv` for the frozen rules.
 | `stage2_classify.py` | channel classification (Build 01) | `f4c5c1e3fd1e56f2` |
 | `stage3_profile.py` | channel L-profiles (Build 01) | `bb5ab34172d9afed` |
 | `stage3b_rescue.py` | profiling rescue pass | `a676e2f88b7c8f8c` |
-| `stage4_catalog.py` | catalog assembly (Build 01) | `e6710f7629c0be57` |
+| `stage4_catalog.py` | catalog assembly (Build 01) | `62c4a7312a7f648e` |
 | `stage5_diag01b.py` | diagnostics (Build 01b) | `f0becdfd2c062961` |
 | `stage6_freeze01c.py` | corpus freeze (Build 01c) | `5de16a3d3a614bf3` |
 | `stage7_resolve01d.py` | domain/family resolution (Build 01d; paths anonymized) | `e0803ba199cf9793` |
@@ -66,3 +66,5 @@ frozen-corpus families.
 | `stage27_gate.py` | TESTS 5+7: co-occurrence example + ground-truth gate library | `b5b2758e6b38c4af` |
 | `stage28_powerfp.py` | TEST 6: power curves + FP calibration (assembly from frozen power13) | `15da9b093e9bc63d` |
 | `stage29_pairedci.py` | v10.4: paired family-bootstrap CIs for the transfer-ladder deltas | `2d76d0a9afcc30ba` |
+
+Note (v10.4): `stage4_catalog.py` was re-anonymized for the deposit (one project-folder token rewritten; see anonymization_log.txt); its hash above reflects the deposit copy.

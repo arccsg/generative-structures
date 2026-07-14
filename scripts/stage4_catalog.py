@@ -62,7 +62,7 @@ PROJECT_TOPIC = {
     "waterfall-msa-deployed": ("geography", "metro_areas", "low"),
     "msa": ("geography", "metro_areas", "low"),
     "structural-risk": ("risk_management", "structural_risk", "low"),
-    "generative-structures": ("simulation", "generated_data", "low"),
+    "<GEN-SIM-PROJECT>": ("simulation", "generated_data", "low"),
     "prime-factorization": ("numeric_analysis", "factorization_inputs", "low"),
     "cp-discovery": ("numeric_analysis", "constructed_process_discovery", "low"),
     "data-hold": ("unknown", "unlabeled_holding_area", "low"),
